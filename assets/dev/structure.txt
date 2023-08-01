@@ -1,0 +1,41 @@
+app loads app.js
+app loading screen stuff
+hits landing page. Landing page has buttons for
+  root level visibility toggled by loggedIn status, default false.
+  menu:hidden: user icon hidden unless logged in
+    context:hidden: user logout button, reload landing page.
+  navigation:visible: 'webcall' sign in through steam webcall
+    function:success?
+      function:context: 'saveLibInfo', reload landing with loggedIn: true
+      else
+      function:error: alert user, junk data recieved.
+  navigation:hidden: Log In, navigate to 'home'
+  navigation:hidden: not you? 'webcall' sign in through steam webcall
+'HOME', has buttons for
+  topbar:
+    navigation: 'library'
+    navigation: 'daily random/home'
+    navigation: 'settings'
+  navigation: 'gamedetail' randomly selected game
+  button: remove game from random selection criteria
+  button: re-roll random selected game
+  navigation: 'gamedetail' recently played game || hidden
+'LIBRARY', has buttons for
+  header:
+    navigation:back: return to 'home'
+    button:sort&filter: set sort order, default alphabetical
+  flatlist:
+    checkbox:context: game enabled or not
+    navigation: 'gamedetail'
+'SETTINGS', has buttons for
+  header:
+    navigation:back: return to 'home'
+    button:update: refetch library from 'webcall'
+  button:etc...: various settings, minimum of display mode, displayed as such
+    binaryChoice: button enabled or disabled style
+    trinaryChoice: three button row, selected enabled nonselected disabled style
+    greaterChoice: dropdown menu? idk
+  context:button:submit: saves current settings to global app settings context
+'GAMEDETAILS', has buttons for:
+  navigation: 'webcall' view page in steam store
+  checkbox:context: game enabled or not
