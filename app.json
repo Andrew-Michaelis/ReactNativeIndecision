@@ -5,7 +5,8 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/indecision-logo184trans.png",
-    "userInterfaceStyle": "light",
+    "scheme": "https",
+    "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/indecision-logo184trans.png",
       "resizeMode": "contain",

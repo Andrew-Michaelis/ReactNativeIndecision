@@ -1,14 +1,15 @@
 import 'react-native-gesture-handler';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { Provider } from 'react-redux';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
 import DisplayCol from './util/DisplayColor';
+import { store } from './src/state/store';
 
 import LoadingScreen from './screens/LoadingScreen';
 import LandingScreen from './screens/LandingScreen';
@@ -36,9 +37,9 @@ export default function App() {
   }
 
   return (
-    <>
-      <StatusBar style='auto' />
-      <NavigationContainer onLayout={onLayoutRootView}>
+    <Provider store={store}>
+      <StatusBar style='light' />
+      <NavigationContainer>
         <Stack.Navigator
           initialRouteName='LandingPage'
           screenOptions={{
@@ -70,7 +71,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </Provider>
   );
 }
 

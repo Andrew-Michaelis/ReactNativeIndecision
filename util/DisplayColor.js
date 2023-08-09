@@ -1,9 +1,12 @@
 import { GlobalStyles } from "../constants/styles";
+import { useSelector } from "react-redux";
 
-export default function DisplayCol(col) {
-  const isDark = true;
+function DisplayCol(col) {
 
-  if (isDark) {
+  // const displayMode = useSelector((state) => state.setting.display);
+  let displayMode = 'dark';
+
+  if (displayMode === 'dark') {
     switch(col) {
       case 'background':
         return GlobalStyles.dark.background;
@@ -23,6 +26,8 @@ export default function DisplayCol(col) {
         return GlobalStyles.dark.secondary;
       case 'text':
         return GlobalStyles.dark.text;
+      case 'hint' :
+        return GlobalStyles.dark.hint;
     }
   }else{
     switch(col) {
@@ -44,6 +49,10 @@ export default function DisplayCol(col) {
         return GlobalStyles.light.secondary;
       case 'text':
         return GlobalStyles.light.text;
+      case 'hint':
+        return GlobalStyles.light.hint;
     }
   }
 }
+
+export default DisplayCol;

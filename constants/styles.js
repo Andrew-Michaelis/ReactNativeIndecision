@@ -6,6 +6,7 @@ export const GlobalStyles = {
   },
   light: {
     text: '#050505',
+    hint: '#696969',
     background: '#fafafa',
     primary100: '#D3F1DA',
     primary300: '#9DDFAD',
@@ -17,6 +18,7 @@ export const GlobalStyles = {
   },
   dark: {
     text: '#fafafa',
+    hint: '#969696',
     background: '#050505',
     primary900: '#D3F1DA',
     primary700: '#9DDFAD',

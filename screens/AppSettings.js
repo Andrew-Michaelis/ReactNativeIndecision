@@ -1,9 +1,10 @@
 import { Text, View } from "react-native";
 
 function Settings() {
+
   return (
     <View>
-      <Text>Settings Page</Text>
+      <Text>Settings</Text>
     </View>
   );
 }

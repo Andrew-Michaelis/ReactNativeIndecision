@@ -1,67 +1,85 @@
-
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 
-import { GlobalStyles } from '../constants/styles';
 import DisplayCol from '../util/DisplayColor';
 
 import AppLibrary from '../screens/AppLibrary';
 import AppHome from '../screens/AppHome';
 import AppSettings from '../screens/AppSettings';
+import { useSelector } from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
 function CoreNavigation () {
   return (
-    <Tab.Navigator
-      screenOptions={({ navigation }) => ({
-        initialRouteName: 'AppHome',
-        headerStyle: { backgroundColor: DisplayCol('background') },
-        headerTintColor: DisplayCol('text'),
-        tabBarStyle: { backgroundColor: DisplayCol('background') },
-        tabBarActiveTintColor: GlobalStyles,
-        // headerRight: ({ tintColor }) => (
-        //   <ImageButton
-        //     image=CONTEXT_USER_ICON
-        //     size=24
-        //     onPress={()=>{
-        //       menu popup - logout button, last synced text, resync button
-        //       logout onpress = logout then, navigation.navigate('LandingScreen')
-        //       resync button makes webcall and checks for changes since last call before consolidating then saving context
-        //     }}
-        //   />
-        // )
-      })}
-    >
-      <Tab.Screen
-        name='AppLibrary'
-        component={AppLibrary}
-        options={{
-          title: 'Library',
-          tabBarLabel: 'Lib',
-          tabBarIcon: ({color, size}) => <SimpleLineIcons name='game-controller' size={size} color={color} />
-        }}
-      />
-      <Tab.Screen
-        name='AppHome'
-        component={AppHome}
-        options={{
-          title: 'Random',
-          tabBarLabel: 'Home',
-          tabBarIcon: ({color, size}) => <SimpleLineIcons name='home' size={size} color={color} />
-        }}
-      />
-      <Tab.Screen
-        name='AppSettings'
-        component={AppSettings}
-        options={{
-          title: 'Settings',
-          tabBarLabel: 'Settings',
-          tabBarIcon: ({color, size}) => <SimpleLineIcons name='settings' size={size} color={color} />
-        }}
-      />
-    </Tab.Navigator>
+    <>
+      <StatusBar hidden={true} />
+      <Tab.Navigator
+        initialRouteName='AppHome'
+        backBehavior='none'
+        screenOptions={({ navigation, route }) => ({
+          tabBarStyle: { 
+            backgroundColor: DisplayCol('background'),
+          },
+          tabBarActiveTintColor: DisplayCol('accent'),
+          tabBarInactiveTintColor: DisplayCol('hint'),
+          tabBarIndicatorStyle: {
+            backgroundColor: DisplayCol('accent'),
+            height: 20,
+            borderTopLeftRadius: 15,
+            borderTopRightRadius: 15,
+          },
+          tabBarItemStyle: {
+            borderBottomWidth: 3,
+            borderBlockColor: DisplayCol('background'),
+          },
+          tabBarIconStyle: { 
+            justifyContent: 'center', 
+            alignItems: 'center',
+          },
+        })}
+      >
+        <Tab.Screen
+          name='AppLibrary'
+          component={AppLibrary}
+          options={{
+            title: 'Library',
+            tabBarLabel: ({focused, color}) => <Text style={{color: color, textTransform: 'uppercase'}}>{focused ? '' : 'games'}</Text>,
+            tabBarIcon: ({color}) => <SimpleLineIcons name='game-controller' size={24} color={color} />,
+          }}
+        />
+        <Tab.Screen
+          name='AppHome'
+          component={AppHome}
+          options={{
+            title: 'Random',
+            tabBarLabel: ({focused, color}) => <Text style={{color: color, textTransform: 'uppercase'}}>{focused ? '' : 'home'}</Text>,
+            tabBarIcon: ({color}) => <SimpleLineIcons name='home' size={24} color={color} />,
+          }}
+        />
+        <Tab.Screen
+          name='AppSettings'
+          component={AppSettings}
+          options={({ route }) => ({
+            title: 'Settings',
+            tabBarLabel: ({focused, color}) => <Text style={{color: color, textTransform: 'uppercase'}}>{focused ? '' : 'settings'}</Text>,
+            tabBarIcon: ({color}) => <SimpleLineIcons name='settings' size={24} color={color} />,
+          })}
+        />
+      </Tab.Navigator>
+    </>
   );
 }
 
 export default CoreNavigation;
+
+const styles = StyleSheet.create({
+  barTab: {
+    backgroundColor: DisplayCol('background'),
+    fontFamily: 'Barlow',
+    fontWeight: 'bold',
+    fontSize: 30,
+  }
+})
