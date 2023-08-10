@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { API_KEY } from '@env';
 import * as AuthSession from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
 import 'react-native-get-random-values';
 import { v4 } from 'uuid';
 
@@ -16,8 +17,21 @@ import Button from "../components/UI/Button";
 const userId = v4();
 const apiKey = API_KEY;
 const defaultUrl = `https://steamcommunity.com/openid`;
-const useProxy = true;
+const useProxy = false;
 const redirectUri = AuthSession.makeRedirectUri({ useProxy });
+const realm = "Indecision";
+const oId = {
+  url: `https://steamcommunity.com/openid/login`,
+  cId: `openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`,
+  id: `openid.identity=http://specs.openid.net/auth/2.0/identifier_select`,
+  mode: `openid.mode=checkid_setup`,
+  ns: `openid.ns=http://specs.openid.net/auth/2.0`,
+  realm: `openid.realm=https://${realm}`,
+  returnTo: `openid.return_to=https://${realm}/signin/`
+}
+const sitsUri = `${oId.url}?${oId.cId}&${oId.id}&${oId.mode}&${oId.ns}&${oId.realm}&${oId.returnTo}`
+
+const pleaseWork = "vvF50H4AoZaZ0sWOnKY7Nda0g"
 
 function LandingScreen({ navigation }) {
   const user = useSelector((state) => state.user.name);
@@ -30,8 +44,8 @@ function LandingScreen({ navigation }) {
     responseType: 'code',
     scopes: ['openid', 'profile'],
   };
-  const discovery = AuthSession.useAutoDiscovery(defaultUrl)
-  const [request, result, promptAsync] = AuthSession.useAuthRequest(config, discovery);
+  // const discovery = AuthSession.useAutoDiscovery(defaultUrl)
+  // const [request, result, promptAsync] = AuthSession.useAuthRequest(config, discovery);
 
   function pressHandler() {
 
@@ -54,15 +68,20 @@ function LandingScreen({ navigation }) {
   }
 
   function httpRequest() {
+    // try{
+    //   promptAsync({useProxy});
+    // }catch(e){
+    //   console.log(e);
+    // }
     try{
-      promptAsync({useProxy});
+      WebBrowser.openAuthSessionAsync(sitsUri)
     }catch(e){
       console.log(e);
     }
   }
 
   const fetchUser = async () => {
-    const url = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=76561197960435530`;
+    const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=76561197960435530`;
     const response = await axios.get(url);
     console.log(response.data.response.players);
   };
@@ -75,7 +94,7 @@ function LandingScreen({ navigation }) {
       <Button onPress={fetchUser}>more buttony</Button>
       <View style={styles.buttonContainer}>
         <Button onPress={pressHandler} style={styles.button} mode='flat'>some</Button>
-        <Button onPress={httpRequest} style={styles.button} disabled={!request}>{result || "SITS"}</Button>
+        <Button onPress={httpRequest} style={styles.button}>{"SITS"}</Button>
       </View>
     </SafeAreaView>
   );

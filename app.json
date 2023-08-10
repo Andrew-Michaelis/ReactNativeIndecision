@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "ReactNativeIndecision",
-    "slug": "ReactNativeIndecision",
+    "name": "React Native Indecision",
+    "slug": "react-native-indecision",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/indecision-logo184trans.png",
-    "scheme": "https",
+    "scheme": "Indecision",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/indecision-logo184trans.png",
@@ -16,13 +16,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "Indecision"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
-      }
+      },
+      "package": "Indecision"
     },
     "web": {
       "favicon": "./assets/favicon.png"
