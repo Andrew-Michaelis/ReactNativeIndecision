@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/indecision-logo184trans.png",
-    "scheme": "Indecision",
+    "scheme": "com.andrewmichaelis.reactnativeindecision",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/indecision-logo184trans.png",
@@ -24,10 +24,15 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
       },
-      "package": "Indecision"
+      "package": "com.andrewmichaelis.reactnativeindecision"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "69a1aeae-b402-47f0-855e-c1cba1dda78c"
+      }
     }
   }
 }

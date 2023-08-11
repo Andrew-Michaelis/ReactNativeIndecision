@@ -5,8 +5,7 @@ import axios from "axios";
 import { API_KEY } from '@env';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
-import 'react-native-get-random-values';
-import { v4 } from 'uuid';
+import * as Linking from 'expo-linking';
 
 import { updateUsername } from "../src/actions/userSlice";
 import { toggleDisplay } from "../src/actions/settingSlice";
@@ -14,11 +13,11 @@ import { toggleDisplay } from "../src/actions/settingSlice";
 import DisplayCol from "../util/DisplayColor";
 import Button from "../components/UI/Button";
 
-const userId = v4();
+WebBrowser.maybeCompleteAuthSession;
+
 const apiKey = API_KEY;
 const defaultUrl = `https://steamcommunity.com/openid`;
-const useProxy = false;
-const redirectUri = AuthSession.makeRedirectUri({ useProxy });
+const redirectUri = AuthSession.makeRedirectUri();
 const realm = "Indecision";
 const oId = {
   url: `https://steamcommunity.com/openid/login`,
@@ -27,28 +26,18 @@ const oId = {
   mode: `openid.mode=checkid_setup`,
   ns: `openid.ns=http://specs.openid.net/auth/2.0`,
   realm: `openid.realm=https://${realm}`,
-  returnTo: `openid.return_to=https://${realm}/signin/`
+  returnTo: `openid.return_to=https://${redirectUri}signin/`
 }
 const sitsUri = `${oId.url}?${oId.cId}&${oId.id}&${oId.mode}&${oId.ns}&${oId.realm}&${oId.returnTo}`
 
-const pleaseWork = "vvF50H4AoZaZ0sWOnKY7Nda0g"
+const pleaseWork = "76561198031476867"
 
 function LandingScreen({ navigation }) {
   const user = useSelector((state) => state.user.name);
   const displayMode = useSelector((state) => state.setting.display);
   const dispatch = useDispatch();
 
-  const config = {
-    redirectUri,
-    clientId: `${userId}`,
-    responseType: 'code',
-    scopes: ['openid', 'profile'],
-  };
-  // const discovery = AuthSession.useAutoDiscovery(defaultUrl)
-  // const [request, result, promptAsync] = AuthSession.useAuthRequest(config, discovery);
-
   function pressHandler() {
-
     navigation.navigate('CoreNavigation');
   }
 
@@ -68,22 +57,17 @@ function LandingScreen({ navigation }) {
   }
 
   function httpRequest() {
-    // try{
-    //   promptAsync({useProxy});
-    // }catch(e){
-    //   console.log(e);
-    // }
     try{
-      WebBrowser.openAuthSessionAsync(sitsUri)
+      WebBrowser.openAuthSessionAsync(sitsUri, redirectUri)
     }catch(e){
       console.log(e);
     }
   }
 
   const fetchUser = async () => {
-    const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=76561197960435530`;
-    const response = await axios.get(url);
-    console.log(response.data.response.players);
+    const url = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${pleaseWork}`;
+    const playerSum = await axios.get(url);
+    console.log(playerSum.data.response.players);
   };
 
   return (
