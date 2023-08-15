@@ -4,9 +4,9 @@ import DisplayCol from "../../util/DisplayColor";
 
 function Button({ children, onPress, mode, style }) {
   return (
-    <View style={[style, styles.buttonContainer]}>
-      <Pressable onPress={onPress} style={({pressed}) => pressed && styles.pressed}>
-        <View style={[styles.button, mode === 'flat' && styles.flat]}>
+    <View style={[styles.buttonContainer, style]}>
+      <Pressable onPress={onPress} style={[style, ({pressed}) => pressed && styles.pressed]}>
+        <View style={[styles.button, mode === 'flat' && styles.flat, style]}>
           <Text style={[styles.buttonText, mode === 'flat' && styles.flatText, {textTransform: 'uppercase'}]}>
             {children}
           </Text>
