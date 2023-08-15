@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { API_KEY } from '@env';
 
-import { updateUserName, updateUserId, updateUserAvatar, updateUserLibrary } from "../src/actions/userSlice";
+import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary } from "../src/actions/userSlice";
 import { toggleDisplay } from "../src/actions/settingSlice";
 
 import DisplayCol from "../util/DisplayColor";
@@ -72,7 +72,10 @@ function LandingScreen({ navigation }) {
         try{
           const lib = await axios.get(libUrl);
           userLib = lib.data.response;
-          dispatch(updateUserLibrary(userLib))
+          userLib.games.forEach(element => {
+            return ("white" in element) ? element : {...element, white: true}
+          });
+          dispatch(createUserLibrary(userLib))
         }catch(e){
           Alert.alert(`Fetching Failed`, `Fetching games for ${userName} failed. Is your profile set to public?`)
           return
@@ -102,7 +105,7 @@ function LandingScreen({ navigation }) {
           style={styles.userId}
           onChangeText={setIdInput}
           value={idInput}
-          onLayout={()=> userId !== '' && setIdInput(userId)}
+          onLayout={()=> userId === '' && setIdInput(pleaseWork)}
           autoComplete='off'
           autoCorrect={false}
           cursorColor={DisplayCol('text')}

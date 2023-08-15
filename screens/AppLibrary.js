@@ -2,17 +2,34 @@ import { FlatList, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
 import DisplayCol from "../util/DisplayColor";
+import GameItem from "../components/Library/GameItem";
 
 function Library() {
-  const userLibrary = useSelector((state) => state.user.lib);
+  const userLibrary = useSelector((state) => state.user.lib.games);
+
+  function handleDetailNavigation(id) {
+
+  }
+  
+  function handleDetailCheckbox(id) {
+
+  }
+
   return (
     <View>
       <Text>Library Page</Text>
       <FlatList 
-        data={userLibrary.games} 
-        style={{backgroundColor: DisplayCol('primary300'), width: '100%', height: '100%'}}
-        renderItem={({item}) => <Text style={{color: DisplayCol('text'), height: 20, width: 200}}>{item.name}</Text>}
-        initialNumToRender={4}
+        ref={(ref) => { this.flatListRef = ref; }}
+        data={userLibrary}
+        initialNumToRender={10}
+        style={{backgroundColor: DisplayCol('background'), width: '100%', height: '100%', padding: 16,}}
+        renderItem={({item}) => 
+          <GameItem 
+            children={item.name}
+            imgUrl={`http://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.img_icon_url}.jpg`}
+            white={true}
+          />
+        }
       />
     </View>
   );

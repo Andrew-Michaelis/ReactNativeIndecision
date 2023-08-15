@@ -20,12 +20,12 @@ export const userSlice = createSlice({
     updateUserAvatar: (state, action) => {
       state.avatarUrl = action.payload
     },
-    updateUserLibrary: (state, action) => {
+    createUserLibrary: (state, action) => {
       state.lib = action.payload
     }, // {} an array? or object? containing saved library info as a string
   },
 })
 
-export const { updateUserName, updateUserId, updateUserAvatar, updateUserLibrary } = userSlice.actions
+export const { updateUserName, updateUserId, updateUserAvatar, createUserLibrary } = userSlice.actions
 
 export default userSlice.reducer
