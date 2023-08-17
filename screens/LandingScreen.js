@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { API_KEY } from '@env';
 
-import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary } from "../src/actions/userSlice";
+import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary, updateUserProfile } from "../src/actions/userSlice";
 import { toggleDisplay } from "../src/actions/settingSlice";
 
 import DisplayCol from "../util/DisplayColor";
@@ -24,6 +24,10 @@ function LandingScreen({ navigation }) {
   const userId = useSelector((state) => state.user.id);
   const displayMode = useSelector((state) => state.setting.display);
   const dispatch = useDispatch();
+
+  function findMyId() {
+
+  }
 
   function changeDisplaySetting() {
     let newDisplay = '';
@@ -62,22 +66,33 @@ function LandingScreen({ navigation }) {
       console.log(`userUrl: ${userUrl}\nlibUrl: ${libUrl}`);
       try{
         const user = await axios.get(userUrl);
-        userObject = user.data.response.players;
-        dispatch(updateUserAvatar(userObject.avatar))
+        userObject = await user.data.response.players[0];
+        console.log(`user: ${userObject.personaname}\navatar: ${userObject.avatar}\nuserprof: ${userObject.profileurl}`)
         dispatch(updateUserName(userObject.personaname))
+        dispatch(updateUserAvatar(userObject.avatar))
+        dispatch(updateUserProfile(userObject.profileurl))
       }catch(e){
         Alert.alert(`Fetching Failed`, `Fetching profile information for ${idInput} failed. Is your profile set to public?`)
+        submitted=false;
         return
       }finally{
         try{
+          let looptest = 0
+          let truthy = 0
+          let falsy = 0
           const lib = await axios.get(libUrl);
           userLib = lib.data.response;
           userLib.games.forEach(element => {
+            looptest ++
+            "white" in element ? truthy++ : falsy++
             return ("white" in element) ? element : {...element, white: true}
           });
+          console.log(`count: ${userLib.game_count}\nlooped: ${looptest}\ntruthy: ${truthy}\nfalsy: ${falsy}\nitemOne: ${JSON.stringify(userLib.games[0])}`)
           dispatch(createUserLibrary(userLib))
+          console.log("postdispatch")
         }catch(e){
           Alert.alert(`Fetching Failed`, `Fetching games for ${userName} failed. Is your profile set to public?`)
+          submitted=false;
           return
         }finally{
           navigation.navigate('CoreNavigation');
@@ -85,17 +100,6 @@ function LandingScreen({ navigation }) {
       }
     }
   }
-
-
-
-
-  function logStuff() {
-    console.log(`userId: ${userId} \nidInput: ${idInput}`)
-    // console.log(`library: ${userLibrary.games}`)
-  }
-
-
-
 
   return (
     <SafeAreaView style={styles.rootContainer}>
@@ -118,7 +122,7 @@ function LandingScreen({ navigation }) {
       </View>
       <View>
         <Text style={styles.textContainer}>Don't know your Steam Id?</Text>
-        <Button onPress={logStuff}>Tester</Button>
+        <Button onPress={findMyId}>Tester</Button>
       </View>
     </SafeAreaView>
   );

@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import DisplayCol from "../../util/DisplayColor";
 
 function GameItem({children, white, imgUrl}) {
-  return(
+  return (
     <View style={styles.widgetView}>
       <View style={styles.buttonView}>
         <Pressable style={styles.checkButton}>
