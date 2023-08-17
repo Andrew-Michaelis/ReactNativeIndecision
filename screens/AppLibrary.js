@@ -8,14 +8,15 @@ import LibraryHeader from "../components/Library/LibraryHeader";
 function Library() {
   const userLibrary = useSelector((state) => state.user.lib.games);
 
+  const setting = useSelector((state) => state.setting.display);
+
   function handleAvatarPress(){
-    console.log(userLibrary[0].white)
+    console.log(setting)
   }
 
   return (
     <View>
       <LibraryHeader onAvatarPress={handleAvatarPress}/>
-      {console.log(`postheader`)}
       <FlatList 
         ref={(ref) => { this.flatListRef = ref; }}
         data={userLibrary}
@@ -29,7 +30,6 @@ function Library() {
           />
         }
       />
-      {console.log(`post list`)}
     </View>
   )
 }
@@ -38,7 +38,7 @@ export default Library;
 
 const styles = StyleSheet.create({
   listContainer: {
-    backgroundColor: DisplayCol('background'), 
+    backgroundColor: DisplayCol('background'),
     width: '100%', 
     height: '100%', 
     padding: 16,

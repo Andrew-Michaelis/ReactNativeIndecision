@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TextInput, Alert, FlatList } from "react-native";
+import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -6,7 +6,6 @@ import axios from "axios";
 import { API_KEY } from '@env';
 
 import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary, updateUserProfile } from "../src/actions/userSlice";
-import { toggleDisplay } from "../src/actions/settingSlice";
 
 import DisplayCol from "../util/DisplayColor";
 import Button from "../components/UI/Button";
@@ -16,7 +15,8 @@ const findMyIdHelp = "https://help.steampowered.com/en/faqs/view/2816-BE67-5B69-
 const apiKey = API_KEY;
 const pleaseWork = "76561198031476867"
 
-function LandingScreen({ navigation }) {
+function LandingScreen({ route, navigation }) {
+  const theme = route.params.mode;
   const [idInput, setIdInput] = useState('');
   const submitted = false;
   const userLibrary = useSelector((state) => state.user.lib);
@@ -27,13 +27,6 @@ function LandingScreen({ navigation }) {
 
   function findMyId() {
 
-  }
-
-  function changeDisplaySetting() {
-    let newDisplay = '';
-    (displayMode === 'dark') ? newDisplay='light' : newDisplay='dark';
-
-    dispatch(toggleDisplay(newDisplay));
   }
 
   const isValidId = (user, input) =>{
@@ -102,22 +95,29 @@ function LandingScreen({ navigation }) {
   }
 
   return (
-    <SafeAreaView style={styles.rootContainer}>
+    <SafeAreaView style={[styles.rootContainer,{backgroundColor: DisplayCol('background', theme)}]}>
       <View style={styles.submitForm}>
-        <Title textStyle={styles.textContainer}>Enter Your Steam Id</Title>
+        <Title textStyle={[styles.textContainer,{color: DisplayCol('text', theme)}]}>Enter Your Steam Id</Title>
         <TextInput 
-          style={styles.userId}
+          style={[styles.userId,{
+            borderColor: DisplayCol('accent', theme),
+            backgroundColor: DisplayCol('primary100', theme),
+            color: DisplayCol('text', theme),
+          }]}
           onChangeText={setIdInput}
           value={idInput}
           onLayout={()=> userId === '' && setIdInput(pleaseWork)}
           autoComplete='off'
           autoCorrect={false}
-          cursorColor={DisplayCol('text')}
+          cursorColor={DisplayCol('text', theme)}
           placeholder='Steam User Id'
-          placeholderTextColor={DisplayCol('primary900')}
+          placeholderTextColor={DisplayCol('primary900', theme)}
         />
         <View style={styles.buttonContainer}>
-          <Button onPress={fetchInfoFunction} style={styles.button}>Submit Steam Id</Button>
+          <Button 
+            onPress={fetchInfoFunction} 
+            style={[styles.button,{borderColor: DisplayCol('accent', theme)}]}
+          >Submit Steam Id</Button>
         </View>
       </View>
       <View>
@@ -136,10 +136,8 @@ const styles = StyleSheet.create({
     padding: 24,
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: DisplayCol('background'),
   },
   textContainer: {
-    color: DisplayCol('text'),
     marginHorizontal: 24,
     marginVertical: 0,
   },
@@ -158,7 +156,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 0,
     borderTopLeftRadius: 0,
     borderTopWidth: 0,
-    borderColor: DisplayCol('accent'),
   },
   userId: {
     textAlign: 'center',
@@ -168,9 +165,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 9,
     borderTopLeftRadius: 9,
     borderBottomWidth: 1,
-    borderColor: DisplayCol('accent'),
-    backgroundColor: DisplayCol('primary100'),
-    color: DisplayCol('text'),
     fontSize: 18,
   },
 })
