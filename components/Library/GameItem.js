@@ -1,25 +1,40 @@
 import { Pressable, View, Text, StyleSheet, Image } from "react-native";
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState, memo } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DisplayCol from "../../util/DisplayColor";
 
-function GameItem({children, white, imgUrl}) {
+let once = 0
+
+function GameItem({index, children, white, imgUrl}) {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setMode(theme.mode);
   }, [theme])
 
+  function allowListToggle() {
+    console.log(`index: ${index} || w: ${white}`)
+    once === 0 && dispatch(allowListToggle(index)) && once++
+  }
+
   return (
-    <View style={[styles.widgetView, {
-      borderColor: DisplayCol('accent', mode),
-      backgroundColor: DisplayCol('primary100', mode),
-    }]}>
+    <View style={
+      [styles.widgetView, {
+        borderColor: DisplayCol('accent', mode),
+        backgroundColor: DisplayCol('primary100', mode),
+      }]}
+    >
       <View style={styles.buttonView}>
-        <Pressable style={[styles.checkButton, {borderRightColor: DisplayCol('accent', mode)}]}>
+        <Pressable 
+          style={[styles.checkButton, {
+            borderRightColor: DisplayCol('accent', mode)
+          }]}
+          onPress={() => allowListToggle()}
+        >
           <MaterialIcons 
             name={white ? 'radio-button-checked' : 'radio-button-unchecked'}
             style={[styles.checkItem, {color: DisplayCol('accent', mode)}]}
@@ -42,7 +57,14 @@ function GameItem({children, white, imgUrl}) {
   )
 }
 
-export default GameItem;
+function equal(prev, next) {
+  if(prev.children !== next.children) {
+    return false;
+  }
+  return true;
+}
+
+export default memo(GameItem, equal);
 
 const styles = StyleSheet.create({
   widgetView: {
@@ -51,7 +73,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginVertical: 4,
     height: 50,
-    width: '90%',
+    width: 300,
     borderWidth: 2,
     borderRadius: 8,
   },

@@ -23,9 +23,8 @@ function LibraryFilter(){
     typeof search === 'string' ? search = search : search = "";
     console.log(`o: ${order} ||I|| s: ${search}`);
     canEdit = false;
-    let testName = new String();
     const sortReg = search.toLowerCase();
-    const sortedLib = userLibrary.games
+    const sortedLib = userLibrary
       .filter((obj) => {
         return obj.name.toLowerCase().match(sortReg) !== null
       })
@@ -40,13 +39,10 @@ function LibraryFilter(){
           case 'lastplayed':
             return ((objA.rtime_last_played === objB.rtime_last_played) ? 0 : ((objA.rtime_last_played > objB.rtime_last_played) ? 1 : -1))
           default:
-            console.log(`1: ${objA} || 2: ${objB} ||| ${JSON.stringify(objA)}\n${JSON.stringify(objB)}`)
-            return objA.appid - objB.appid
+            return (objA.appid - objB.appid)
         }
       })
-      .map((obj) => {
-        testName += (obj.name + " I:.:I ")
-      })
+    console.log(sortedLib[0].white)
     dispatch(sortUserLibrary(sortedLib));
     canEdit = true;
     magic = false;
@@ -71,7 +67,6 @@ function LibraryFilter(){
       />
       <SearchButton 
         onSearch={() => applySort(null, searchInput)}
-        filt={searchInput}
         style={[styles.searchButton, {backgroundColor: DisplayCol('primary700', mode)}]}
       />
     </View>

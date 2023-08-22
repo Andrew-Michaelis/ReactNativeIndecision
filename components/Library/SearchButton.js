@@ -6,7 +6,7 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import DisplayCol from "../../util/DisplayColor";
 
 
-function SearchButton({ onSearch, filt, style }){
+function SearchButton({ onSearch, style }){
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
 

@@ -62,7 +62,6 @@ function CoreNavigation () {
             tabBarLabel: ({focused, color}) => <Text style={[styles.tabLabel, {color: color}]}>{focused ? '' : 'games'}</Text>,
             tabBarIcon: ({color}) => <SimpleLineIcons name='game-controller' size={23} color={color} />,
           }}
-          initialParams={{mode: mode}}
         />
         <Tab.Screen
           name='AppHome'
@@ -72,7 +71,6 @@ function CoreNavigation () {
             tabBarLabel: ({focused, color}) => <Text style={[styles.tabLabel, {color: color}]}>{focused ? '' : 'home'}</Text>,
             tabBarIcon: ({color}) => <SimpleLineIcons name='home' size={23} color={color} />,
           }}
-          initialParams={{mode: mode}}
         />
         <Tab.Screen
           name='AppSettings'
@@ -82,7 +80,6 @@ function CoreNavigation () {
             tabBarLabel: ({focused, color}) => <Text style={[styles.tabLabel, {color: color}]}>{focused ? '' : 'settings'}</Text>,
             tabBarIcon: ({color}) => <SimpleLineIcons name='settings' size={23} color={color} />,
           }}
-          initialParams={{mode: mode}}
         />
       </Tab.Navigator>
     </SafeAreaView>

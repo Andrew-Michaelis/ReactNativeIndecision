@@ -6,9 +6,22 @@ import DisplayCol from "../util/DisplayColor";
 import GameItem from "../components/Library/GameItem";
 import LibraryHeader from "../components/Library/LibraryHeader";
 
+let testingArray = [];
+let dupeCount = 0;
+let lastDupe = 0;
+let total = 0;
+
+const getItemLayout = (data, index) => (
+  {length: 58, offset: 58 * index, index}
+)
+
+const keyExtractor = (item) => item.appid
+
 function Library() {
-  const userLibrary = useSelector((state) => state.user.lib.games);
   const sortedLibrary = useSelector((state) => state.user.sortedLib);
+  const filteredLib = sortedLibrary.filter(function(x) {
+      return x !== undefined
+  });
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
 
@@ -20,23 +33,26 @@ function Library() {
     console.log(setting)
   }
 
+  const RenderItem = ({item, index}) => (
+    <GameItem 
+      index={index}
+      children={item.name}
+      imgUrl={`http://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.img_icon_url}.jpg`}
+      white={item.white}
+    />
+  )
+
   return (
     <View>
       <LibraryHeader onAvatarPress={handleAvatarPress}/>
       <FlatList 
         ref={(ref) => { this.flatListRef = ref; }}
-        data={sortedLibrary}
-        initialNumToRender={10}
+        data={filteredLib}
         style={[styles.listContainer, {backgroundColor: DisplayCol('background', mode)}]}
         ListEmptyComponent={<View />}
-        keyExtractor={(item) => item.appid}
-        renderItem={({item}) => 
-          <GameItem 
-            children={item.name}
-            imgUrl={`http://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.img_icon_url}.jpg`}
-            white={item.white}
-          />
-        }
+        keyExtractor={keyExtractor}
+        renderItem={RenderItem}
+        getItemLayout={getItemLayout}
       />
     </View>
   )

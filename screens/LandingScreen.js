@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import axios from "axios";
 import { API_KEY } from '@env';
 
-import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary, updateUserProfile, sortUserLibrary } from "../src/actions/userSlice";
+import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary, updateUserProfile, sortUserLibrary, updateUserGameCount } from "../src/actions/userSlice";
 
 import DisplayCol from "../util/DisplayColor";
 import Button from "../components/UI/Button";
@@ -22,6 +22,8 @@ function LandingScreen({ navigation }) {
   const userId = useSelector((state) => state.user.id);
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
+
+  let submitted
 
   useEffect(() => {
     setMode(theme.mode);
@@ -65,7 +67,7 @@ function LandingScreen({ navigation }) {
       try{
         const user = await axios.get(userUrl);
         userObject = await user.data.response.players[0];
-        console.log(`user: ${userObject.personaname}\navatar: ${userObject.avatar}\nuserprof: ${userObject.profileurl}`)
+        console.log(`user: ${userObject.personaname}\navatar: ${userObject.avatar}\nuserProfile: ${userObject.profileurl}`)
         dispatch(updateUserName(userObject.personaname))
         dispatch(updateUserAvatar(userObject.avatar))
         dispatch(updateUserProfile(userObject.profileurl))
@@ -75,29 +77,34 @@ function LandingScreen({ navigation }) {
         return
       }finally{
         try{
-          let looptest = 0
-          let truthy = 0
-          let falsy = 0
           const lib = await axios.get(libUrl);
-          userLib = lib.data.response;
-          sortLib = userLib.games
-          .map((obj) => {
-            looptest ++
-            "white" in obj ? truthy++ : falsy++
-            return ("white" in obj) ? obj : {white: true, ...obj}
-          })
-          .sort((a, b) => {
-            a.appid - b.appid
+          libObject = lib.data.response
+          gameCount = libObject.game_count
+          console.log(gameCount)
+          userLib = libObject.games
+          .map((obj) => "white" in obj ? obj : {white: true, ...obj})
+          sortLib = libObject.games
+          .map((obj) => "white" in obj ? obj : {white: true, ...obj})
+          .sort(function compareFn(a, b){
+            if(a.name < b.name){
+              return -1
+            }else if(b.name < a.name){
+              return 1
+            }else{
+              return 0
+            }
           });
-          console.log(`count: ${userLib.game_count}\nlooped: ${looptest}\ntruthy: ${truthy}\nfalsy: ${falsy}\nitemOne: ${JSON.stringify(userLib.games[0])}`)
+          console.log(`user: ${userLib[0].name}\nsort: ${sortLib[0].name}`)
+          dispatch(updateUserGameCount(gameCount))
           dispatch(createUserLibrary(userLib))
           dispatch(sortUserLibrary(sortLib))
+          submitted = true;
         }catch(e){
           Alert.alert(`Fetching Failed`, `Fetching games for ${userName} failed. Is your profile set to public?`)
           submitted=false;
           return
         }finally{
-          navigation.navigate('CoreNavigation');
+          submitted && navigation.navigate('CoreNavigation');
         }
       }
     }

@@ -5,13 +5,9 @@ const initialState = {
   avatarUrl: '',
   profileUrl: '',
   id: '',
-  lib: {},
-  sortedLib: [{
-    appid: 0,
-    name: '',
-    playtime_forever: '',
-    rtime_last_played: 0,
-  }],
+  count: 0,
+  lib: [{}],
+  sortedLib: [{}],
 }
 
 export const userSlice = createSlice({
@@ -30,6 +26,15 @@ export const userSlice = createSlice({
     updateUserId: (state, action) => {
       state.id = action.payload
     },
+    updateUserGameCount: (state, action) => {
+      state.count = action.payload
+    },
+    toggleWhite: (state, action) => {
+      const index = state.sortedLib[action.payload]
+      console.log(`pre: ${index.name} || white: ${index.white}`)
+      index.white ? index.white = false : index.white = true 
+      console.log(`post: ${index.name} || white: ${index.white}`)
+    },
     createUserLibrary: (state, action) => {
       state.lib = action.payload
     },
@@ -39,6 +44,6 @@ export const userSlice = createSlice({
   },
 })
 
-export const { updateUserName, updateUserAvatar, updateUserProfile, updateUserId, createUserLibrary, sortUserLibrary } = userSlice.actions
+export const { updateUserName, updateUserAvatar, updateUserProfile, updateUserId, updateUserGameCount, createUserLibrary, sortUserLibrary } = userSlice.actions
 
 export default userSlice.reducer
