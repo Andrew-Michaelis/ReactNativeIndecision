@@ -6,6 +6,12 @@ const initialState = {
   profileUrl: '',
   id: '',
   lib: {},
+  sortedLib: [{
+    appid: 0,
+    name: '',
+    playtime_forever: '',
+    rtime_last_played: 0,
+  }],
 }
 
 export const userSlice = createSlice({
@@ -26,10 +32,13 @@ export const userSlice = createSlice({
     },
     createUserLibrary: (state, action) => {
       state.lib = action.payload
-    }, // {} an array? or object? containing saved library info as a string
+    },
+    sortUserLibrary: (state, action) => {
+      state.sortedLib = action.payload
+    }
   },
 })
 
-export const { updateUserName, updateUserAvatar, updateUserProfile, updateUserId, createUserLibrary } = userSlice.actions
+export const { updateUserName, updateUserAvatar, updateUserProfile, updateUserId, createUserLibrary, sortUserLibrary } = userSlice.actions
 
 export default userSlice.reducer

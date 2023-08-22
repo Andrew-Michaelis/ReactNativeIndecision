@@ -1,14 +1,14 @@
 import { View } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import Button from "../components/UI/Button";
-import { toggleDisplay } from "../src/actions/settingSlice";
+import { toggleTheme } from "../src/actions/themeSlice";
 
 function Settings() {
-  const displayMode = useSelector((state) => state.theme.mode);
   const dispatch = useDispatch();
 
   function changeDisplaySetting() {
+    dispatch(toggleTheme())
   }
 
   return (

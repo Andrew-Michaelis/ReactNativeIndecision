@@ -1,5 +1,6 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 import DisplayCol from "../util/DisplayColor";
 import GameItem from "../components/Library/GameItem";
@@ -7,8 +8,13 @@ import LibraryHeader from "../components/Library/LibraryHeader";
 
 function Library() {
   const userLibrary = useSelector((state) => state.user.lib.games);
+  const sortedLibrary = useSelector((state) => state.user.sortedLib);
+  const theme = useSelector((state) => state.theme);
+  const [mode, setMode] = useState(theme.mode)
 
-  const setting = useSelector((state) => state.setting.display);
+  useEffect(() => {
+    setMode(theme.mode);
+  }, [theme])
 
   function handleAvatarPress(){
     console.log(setting)
@@ -19,9 +25,11 @@ function Library() {
       <LibraryHeader onAvatarPress={handleAvatarPress}/>
       <FlatList 
         ref={(ref) => { this.flatListRef = ref; }}
-        data={userLibrary}
+        data={sortedLibrary}
         initialNumToRender={10}
-        style={styles.listContainer}
+        style={[styles.listContainer, {backgroundColor: DisplayCol('background', mode)}]}
+        ListEmptyComponent={<View />}
+        keyExtractor={(item) => item.appid}
         renderItem={({item}) => 
           <GameItem 
             children={item.name}
@@ -38,7 +46,6 @@ export default Library;
 
 const styles = StyleSheet.create({
   listContainer: {
-    backgroundColor: DisplayCol('background'),
     width: '100%', 
     height: '100%', 
     padding: 16,

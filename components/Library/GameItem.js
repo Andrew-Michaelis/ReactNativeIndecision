@@ -1,28 +1,40 @@
 import { Pressable, View, Text, StyleSheet, Image } from "react-native";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DisplayCol from "../../util/DisplayColor";
 
 function GameItem({children, white, imgUrl}) {
+  const theme = useSelector((state) => state.theme);
+  const [mode, setMode] = useState(theme.mode)
+
+  useEffect(() => {
+    setMode(theme.mode);
+  }, [theme])
+
   return (
-    <View style={styles.widgetView}>
+    <View style={[styles.widgetView, {
+      borderColor: DisplayCol('accent', mode),
+      backgroundColor: DisplayCol('primary100', mode),
+    }]}>
       <View style={styles.buttonView}>
-        <Pressable style={styles.checkButton}>
+        <Pressable style={[styles.checkButton, {borderRightColor: DisplayCol('accent', mode)}]}>
           <MaterialIcons 
             name={white ? 'radio-button-checked' : 'radio-button-unchecked'}
-            style={styles.checkItem}
+            style={[styles.checkItem, {color: DisplayCol('accent', mode)}]}
           />
         </Pressable>
         <View style={styles.textButton}>
           <View style={styles.justifyYouJerk}>
-            <Text style={styles.textItem}>{children}</Text>
+            <Text style={{color: DisplayCol('text', mode)}}>{children}</Text>
           </View>
         </View>
-        <Pressable style={styles.imageButton}>
+        <Pressable style={[styles.imageButton, {borderColor: DisplayCol('accent', mode)}]}>
           <Image 
             defaultSource={require('../../assets/icon.png')}
             source={{uri: imgUrl}}
-            style={styles.imageItem}
+            style={[styles.imageItem, {backgroundColor: DisplayCol('background')}]}
           />
         </Pressable>
       </View>
@@ -42,8 +54,6 @@ const styles = StyleSheet.create({
     width: '90%',
     borderWidth: 2,
     borderRadius: 8,
-    borderColor: DisplayCol('accent'),
-    backgroundColor: DisplayCol('primary100'),
   },
   buttonView: {
     flexDirection: 'row',
@@ -52,20 +62,15 @@ const styles = StyleSheet.create({
   },
   checkButton: {
     paddingHorizontal: 4,
-    borderRightColor: DisplayCol('accent'),
     borderRightWidth: 2,
   },
   checkItem: {
     fontSize: 32,
-    color: DisplayCol('accent'),
   },
   textButton: {
     flexShrink: 1,
     flexGrow: 1,
     padding: 5,
-  },
-  textItem: {
-    color: DisplayCol('text'),
   },
   imageButton: {
     margin: 4,
@@ -74,11 +79,9 @@ const styles = StyleSheet.create({
     
     borderWidth: 2,
     borderRadius: 8,
-    borderColor: DisplayCol('accent'),
     overflow: 'hidden',
   },
   imageItem: {
     flex: 1,
-    backgroundColor: DisplayCol('background'),
   },
 })

@@ -1,13 +1,38 @@
 import { Pressable, View, Text, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 import DisplayCol from "../../util/DisplayColor";
 
-function Button({ children, onPress, mode, style }) {
+function Button({ children, onPress, type, style }) {
+  const theme = useSelector((state) => state.theme);
+  const [mode, setMode] = useState(theme.mode)
+
+  useEffect(() => {
+    setMode(theme.mode);
+  }, [theme])
   return (
     <View style={[styles.buttonContainer, style]}>
-      <Pressable onPress={onPress} style={[style, ({pressed}) => pressed && styles.pressed]}>
-        <View style={[styles.button, mode === 'flat' && styles.flat, style]}>
-          <Text style={[styles.buttonText, mode === 'flat' && styles.flatText, {textTransform: 'uppercase'}]}>
+      <Pressable 
+        onPress={onPress} 
+        style={
+          [style, ({pressed}) => pressed && styles.pressed, {backgroundColor: DisplayCol('primary100', mode)}]}>
+        <View style={
+          [styles.button, {
+            backgroundColor: DisplayCol('primary300', mode),
+            borderColor: DisplayCol('primary900', mode),
+          }, 
+          type === 'flat' && {
+            backgroundColor: DisplayCol('background', mode),
+            borderColor: DisplayCol('primary300', mode),
+          }, style]}>
+          <Text style={
+            [styles.buttonText, {
+              color: DisplayCol('text', mode),
+            }, 
+            type === 'flat' && {
+              color: DisplayCol('primary900', mode),
+            }, {textTransform: 'uppercase'}]}>
             {children}
           </Text>
         </View>
@@ -26,26 +51,17 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 6,
     padding: 8,
-    backgroundColor: DisplayCol('primary300'),
     borderWidth: 1,
-    borderColor: DisplayCol('primary900'),
-  },
-  flat: {
-    backgroundColor: DisplayCol('background'),
-    borderColor: DisplayCol('primary300'),
   },
   buttonText: {
     fontFamily: 'Barlow',
     fontWeight: 'bold',
-    color: DisplayCol('text'),
     textAlign: 'center',
   },
   flatText: {
-    color: DisplayCol('primary900'),
   },
   pressed: {
     opacity: 0.75,
-    backgroundColor: DisplayCol('primary100'),
     borderRadius: 4,
   }
 })

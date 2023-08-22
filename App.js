@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 
-import MainComponent from './components/ThemeContainer';
+import MainNavigator from './components/MainNavigator';
 import { store } from './src/state/store';
 
 SplashScreen.preventAutoHideAsync();
@@ -33,7 +33,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <MainComponent />
+      <MainNavigator />
     </Provider>
   );
 }
