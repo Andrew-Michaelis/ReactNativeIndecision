@@ -1,15 +1,11 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 
 import DisplayCol from "../util/DisplayColor";
 import GameItem from "../components/Library/GameItem";
 import LibraryHeader from "../components/Library/LibraryHeader";
-
-let testingArray = [];
-let dupeCount = 0;
-let lastDupe = 0;
-let total = 0;
+import { sortUserLibrary } from "../src/actions/userSlice";
 
 const getItemLayout = (data, index) => (
   {length: 58, offset: 58 * index, index}
@@ -18,27 +14,33 @@ const getItemLayout = (data, index) => (
 const keyExtractor = (item) => item.appid
 
 function Library() {
-  const sortedLibrary = useSelector((state) => state.user.sortedLib);
-  const filteredLib = sortedLibrary.filter(function(x) {
-      return x !== undefined
-  });
   const theme = useSelector((state) => state.theme);
-  const [mode, setMode] = useState(theme.mode)
+  const [mode, setMode] = useState(theme.mode);
+  const sortedUserLibrary = useSelector((state) => state.user.sortLib);
+  const orderRule = useSelector((state) => state.sorter.order);
+  const searchRule = useSelector((state) => state.sorter.search);
+  const filter = {order: orderRule, search: searchRule};
+  const dispatch = useDispatch();
+
+  const fetchLibrary = () => {
+    console.log(`fetchFilt: ${JSON.stringify(filter)}`)
+    dispatch(sortUserLibrary(filter));
+  }
 
   useEffect(() => {
     setMode(theme.mode);
-  }, [theme])
+  }, [theme, filter])
 
   function handleAvatarPress(){
-    console.log(setting)
+    fetchLibrary();
   }
 
   const RenderItem = ({item, index}) => (
     <GameItem 
       index={index}
       children={item.name}
-      imgUrl={`http://media.steampowered.com/steamcommunity/public/images/apps/${item.appid}/${item.img_icon_url}.jpg`}
-      white={item.white}
+      id={item.appid}
+      icon={item.img_icon_url}
     />
   )
 
@@ -47,7 +49,7 @@ function Library() {
       <LibraryHeader onAvatarPress={handleAvatarPress}/>
       <FlatList 
         ref={(ref) => { this.flatListRef = ref; }}
-        data={filteredLib}
+        data={sortedUserLibrary}
         style={[styles.listContainer, {backgroundColor: DisplayCol('background', mode)}]}
         ListEmptyComponent={<View />}
         keyExtractor={keyExtractor}

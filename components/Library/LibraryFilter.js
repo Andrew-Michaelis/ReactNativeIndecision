@@ -21,32 +21,12 @@ function LibraryFilter(){
 
   function applySort(order, search) {
     typeof search === 'string' ? search = search : search = "";
-    console.log(`o: ${order} ||I|| s: ${search}`);
     canEdit = false;
-    const sortReg = search.toLowerCase();
-    const sortedLib = userLibrary
-      .filter((obj) => {
-        return obj.name.toLowerCase().match(sortReg) !== null
-      })
-      .sort((objA, objB) => {
-        switch(order) {
-          case 'alphabetical':
-            return ((objA.name === objB.name) ? 0 : ((objA.name < objB.name) ? 1 : -1))
-          case 'reverseAlphabetical':
-            return ((objA.name === objB.name) ? 0 : ((objA.name > objB.name) ? 1 : -1))
-          case 'playtime':
-            return ((objA.playtime_forever === objB.playtime_forever) ? 0 : ((objA.playtime_forever > objB.playtime_forever) ? 1 : -1))
-          case 'lastplayed':
-            return ((objA.rtime_last_played === objB.rtime_last_played) ? 0 : ((objA.rtime_last_played > objB.rtime_last_played) ? 1 : -1))
-          default:
-            return (objA.appid - objB.appid)
-        }
-      })
-    console.log(sortedLib[0].white)
-    dispatch(sortUserLibrary(sortedLib));
+    dispatch(sortUserLibrary({order: order, search: search}));
     canEdit = true;
     magic = false;
   }
+
 
   return (
     <View style={styles.searchContainer}>
@@ -66,7 +46,7 @@ function LibraryFilter(){
         placeholderTextColor={DisplayCol('primary900', mode)}
       />
       <SearchButton 
-        onSearch={() => applySort(null, searchInput)}
+        onSearch={() => applySort("", searchInput)}
         style={[styles.searchButton, {backgroundColor: DisplayCol('primary700', mode)}]}
       />
     </View>

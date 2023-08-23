@@ -4,13 +4,17 @@ import { useEffect, useState, memo } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DisplayCol from "../../util/DisplayColor";
+import { getDisallowList } from "../../src/actions/userSlice";
 
 let once = 0
 
-function GameItem({index, children, white, imgUrl}) {
-  const theme = useSelector((state) => state.theme);
-  const [mode, setMode] = useState(theme.mode)
+function GameItem({index, children, id, icon}) {
   const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme);
+  const [mode, setMode] = useState(theme.mode);
+  const disallowList = useSelector((state) => state.user.disallow)
+
+  const imgUrl=`http://media.steampowered.com/steamcommunity/public/images/apps/${id}/${icon}.jpg`
 
   useEffect(() => {
     setMode(theme.mode);
@@ -36,7 +40,7 @@ function GameItem({index, children, white, imgUrl}) {
           onPress={() => allowListToggle()}
         >
           <MaterialIcons 
-            name={white ? 'radio-button-checked' : 'radio-button-unchecked'}
+            name={disallowList.includes(id) ? 'radio-button-unchecked' : 'radio-button-checked'}
             style={[styles.checkItem, {color: DisplayCol('accent', mode)}]}
           />
         </Pressable>

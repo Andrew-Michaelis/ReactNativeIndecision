@@ -5,6 +5,7 @@ import DisplayCol from "../../util/DisplayColor";
 
 function UserIcon({ onPress, mode }) {
   const userIcon = useSelector((state) => state.user.avatarUrl);
+  const backupIcon = require("../../assets/indecision-logo184trans.png")
 
   return (
   <Pressable 
@@ -12,7 +13,7 @@ function UserIcon({ onPress, mode }) {
     onPress={onPress}
   >
     <Image 
-      source={{uri: userIcon}}
+      source={userIcon ? {uri: userIcon} : {number: backupIcon}}
       style={styles.imageItem}
     />
   </Pressable>

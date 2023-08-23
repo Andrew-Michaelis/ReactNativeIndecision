@@ -6,6 +6,7 @@ import axios from "axios";
 import { API_KEY } from '@env';
 
 import { updateUserName, updateUserId, updateUserAvatar, createUserLibrary, updateUserProfile, sortUserLibrary, updateUserGameCount } from "../src/actions/userSlice";
+import { updateFilterPayload } from "../src/actions/sorterSlice";
 
 import DisplayCol from "../util/DisplayColor";
 import Button from "../components/UI/Button";
@@ -36,7 +37,10 @@ function LandingScreen({ navigation }) {
   const isValidId = (user, input) =>{
     let idValid = '';
     let confirmingState = '';
-    if(user.length === 17 && !isNaN(user)){
+    if(user === undefined){
+      console.log(`user: ${user}`)
+      return;
+    }else if(user.length === 17 && !isNaN(user)){
       idValid = true
       confirmingState = user
     }else if(input.length === 17 && !isNaN(input)){
@@ -61,6 +65,7 @@ function LandingScreen({ navigation }) {
     const isValidUser = isValidId(userId, idInput);
     
     if(isValidUser[0]){
+      let err = ['Fetching Failed','Fetching profile information for '];
       const userUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${isValidUser[1]}`;
       const libUrl = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${isValidUser[1]}&include_appinfo=true&format=json`;
       console.log(`userUrl: ${userUrl}\nlibUrl: ${libUrl}`);
@@ -72,40 +77,27 @@ function LandingScreen({ navigation }) {
         dispatch(updateUserAvatar(userObject.avatar))
         dispatch(updateUserProfile(userObject.profileurl))
       }catch(e){
-        Alert.alert(`Fetching Failed`, `Fetching profile information for ${idInput} failed. Is your profile set to public?`)
-        submitted=false;
+        err[1] += `id:${idInput} `
+        submitted = false;
         return
       }finally{
         try{
           const lib = await axios.get(libUrl);
           libObject = lib.data.response
-          gameCount = libObject.game_count
-          console.log(gameCount)
-          userLib = libObject.games
-          .map((obj) => "white" in obj ? obj : {white: true, ...obj})
-          sortLib = libObject.games
-          .map((obj) => "white" in obj ? obj : {white: true, ...obj})
-          .sort(function compareFn(a, b){
-            if(a.name < b.name){
-              return -1
-            }else if(b.name < a.name){
-              return 1
-            }else{
-              return 0
-            }
-          });
-          console.log(`user: ${userLib[0].name}\nsort: ${sortLib[0].name}`)
-          dispatch(updateUserGameCount(gameCount))
-          dispatch(createUserLibrary(userLib))
-          dispatch(sortUserLibrary(sortLib))
-          submitted = true;
+          console.log(JSON.stringify(libObject.game_count));
+          dispatch(updateUserGameCount(libObject.game_count))
+          dispatch(createUserLibrary(libObject.games))
+          dispatch(updateFilterPayload({order: "", search: ""}))
+          dispatch(sortUserLibrary({order: "", search: ""}))
+          submitted = true
         }catch(e){
-          Alert.alert(`Fetching Failed`, `Fetching games for ${userName} failed. Is your profile set to public?`)
-          submitted=false;
+          err[1] += `user:${userName} `
+          submitted = false;
           return
         }finally{
           submitted && navigation.navigate('CoreNavigation');
         }
+        !submitted && Alert.alert(err[0], `${err[1]}failed.\nIs your profile set to public and internet capable of reaching the Steam website?`)
       }
     }
   }
