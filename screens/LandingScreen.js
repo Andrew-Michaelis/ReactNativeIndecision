@@ -77,27 +77,26 @@ function LandingScreen({ navigation }) {
         dispatch(updateUserAvatar(userObject.avatar))
         dispatch(updateUserProfile(userObject.profileurl))
       }catch(e){
-        err[1] += `id:${idInput} `
+        err[0] += `id:${idInput} `
         submitted = false;
         return
       }finally{
         try{
           const lib = await axios.get(libUrl);
           libObject = lib.data.response
-          console.log(JSON.stringify(libObject.game_count));
           dispatch(updateUserGameCount(libObject.game_count))
           dispatch(createUserLibrary(libObject.games))
           dispatch(updateFilterPayload({order: "", search: ""}))
           dispatch(sortUserLibrary({order: "", search: ""}))
           submitted = true
         }catch(e){
-          err[1] += `user:${userName} `
+          err[0] += `user:${userName} `
           submitted = false;
           return
         }finally{
           submitted && navigation.navigate('CoreNavigation');
         }
-        !submitted && Alert.alert(err[0], `${err[1]}failed.\nIs your profile set to public and internet capable of reaching the Steam website?`)
+        !submitted && Alert.alert(err[0], `${err[0]}failed.\nIs your profile set to public and internet capable of reaching the Steam website?`)
       }
     }
   }

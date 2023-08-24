@@ -6,8 +6,7 @@ import DisplayCol from "../../util/DisplayColor";
 import { sortUserLibrary } from "../../src/actions/userSlice";
 import SearchButton from "./SearchButton";
 
-function LibraryFilter(){
-  const userLibrary = useSelector((state) => state.user.lib)
+function HeaderFilter(){
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
   const [searchInput, setSearchInput] = useState('');
@@ -26,7 +25,6 @@ function LibraryFilter(){
     canEdit = true;
     magic = false;
   }
-
 
   return (
     <View style={styles.searchContainer}>
@@ -53,7 +51,7 @@ function LibraryFilter(){
   )
 }
 
-export default LibraryFilter;
+export default HeaderFilter;
 
 const styles = StyleSheet.create({
   searchContainer: {

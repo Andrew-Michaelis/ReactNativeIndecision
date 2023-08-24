@@ -1,9 +1,9 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import DisplayCol from "../../util/DisplayColor";
-import LibraryFilter from "./LibraryFilter";
+import SearchBar from "./HeaderFilter";
 import UserIcon from "../UI/UserIcon";
 
 function LibraryHeader({ onAvatarPress }) {
@@ -22,7 +22,7 @@ function LibraryHeader({ onAvatarPress }) {
         adjustsFontSizeToFit
         style={[styles.headerText, {color: DisplayCol('text', mode),}]}
       >{userName}</Text>
-      <LibraryFilter />
+      <SearchBar />
     </View>
   )
 }

@@ -31,9 +31,7 @@ export const userSlice = createSlice({
       state.count = action.payload
     },
     createUserLibrary: (state, action) => {
-      console.log("START!")
       state.lib = action.payload
-      console.log("DONE?")
     },
     sortUserLibrary: (state, action) => {
       console.log(`actshere? ${JSON.stringify(action.payload)}`)
@@ -43,8 +41,7 @@ export const userSlice = createSlice({
         console.log("1")
         sortedLib = state.lib
         .filter((obj) => {
-          obj === undefined && console.log("BE PURGED")
-          return obj !== undefined && (obj.name.toLowerCase().match(sortRegex) !== null);
+          return obj !== undefined && obj.name.toLowerCase().match(sortRegex) !== null && !state.disallow.includes(obj.appid);
         })
         .sort((a, b) => {
           switch(sortOrder) {
@@ -68,15 +65,19 @@ export const userSlice = createSlice({
         console.log(`ERROR: ${e}`)
       }
     },
-    getDisallowList: (state) => {
-      return state.disallow
-    },
     updateDisallowList: (state, action) => {
-      switch(action.payload.type){
+      const TYPE = action.payload.type;
+      const id = action.payload.id;
+      const disallow = state.disallow;
+
+      switch(TYPE){
         case 'ADD':
-          state.disallow.push(action.payload.id)
+          disallow.push(id)
+          break;
         case 'REMOVE':
-          state.disallow = state.disallow.filter((x) => x !== action.payload.id)
+          i = disallow.indexOf(id)
+          disallow.splice(i, 1)
+          break;
         default:
           return
       }
@@ -92,7 +93,6 @@ export const {
   updateUserGameCount, 
   createUserLibrary, 
   sortUserLibrary,
-  getDisallowList,
   updateDisallowList,
 } = userSlice.actions
 

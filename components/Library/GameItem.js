@@ -4,33 +4,36 @@ import { useEffect, useState, memo } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DisplayCol from "../../util/DisplayColor";
-import { getDisallowList } from "../../src/actions/userSlice";
+import { updateDisallowList } from "../../src/actions/userSlice";
 
-let once = 0
-
-function GameItem({index, children, id, icon}) {
-  const dispatch = useDispatch();
+function GameItem({ children, id, icon, }) {
+  const disallowList = useSelector((state) => state.user.disallow)
+  const [disallowed, setDisallowed] = useState(disallowList.includes(id))
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
-  const disallowList = useSelector((state) => state.user.disallow)
+  console.log(`rendering appid: ${id}`)
+
+  const dispatch = useDispatch();
 
   const imgUrl=`http://media.steampowered.com/steamcommunity/public/images/apps/${id}/${icon}.jpg`
 
   useEffect(() => {
     setMode(theme.mode);
-  }, [theme])
+    setDisallowed(disallowList.includes(id))
+  }, [theme, disallowList])
 
   function allowListToggle() {
-    console.log(`index: ${index} || w: ${white}`)
-    once === 0 && dispatch(allowListToggle(index)) && once++
+    setDisallowed(!disallowed)
+    disallowed ? dispatch(updateDisallowList({type: 'REMOVE', id: id})) : dispatch(updateDisallowList({type: 'ADD', id: id}))
   }
 
   return (
     <View style={
       [styles.widgetView, {
-        borderColor: DisplayCol('accent', mode),
-        backgroundColor: DisplayCol('primary100', mode),
-      }]}
+          borderColor: DisplayCol('accent', mode),
+        },
+        disallowed ? {backgroundColor: 'transparent'} : {backgroundColor: DisplayCol('primary100', mode)},
+      ]}
     >
       <View style={styles.buttonView}>
         <Pressable 
@@ -40,7 +43,7 @@ function GameItem({index, children, id, icon}) {
           onPress={() => allowListToggle()}
         >
           <MaterialIcons 
-            name={disallowList.includes(id) ? 'radio-button-unchecked' : 'radio-button-checked'}
+            name={disallowed ? 'radio-button-unchecked' : 'radio-button-checked'}
             style={[styles.checkItem, {color: DisplayCol('accent', mode)}]}
           />
         </Pressable>
