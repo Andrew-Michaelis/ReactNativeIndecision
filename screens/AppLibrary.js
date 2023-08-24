@@ -15,9 +15,9 @@ const getItemLayout = (data, index) => (
 function Library() {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
-  const sortedUserLibrary = useSelector((state) => state.user.sortLib);
-  const userLibraryIndex = sortedUserLibrary.map((i) => sortedUserLibrary.indexOf(i))
-  console.log(userLibraryIndex);
+  const sortedLibraryIndexArray = useSelector((state) => state.user.sortLibIndex)
+  const changedSort = useSelector((state) => state.user.sortLib.length)
+  console.log("Library");
 
   const orderRule = useSelector((state) => state.sorter.order);
   const searchRule = useSelector((state) => state.sorter.search);
@@ -38,28 +38,27 @@ function Library() {
     fetchLibrary();
   }
 
-  const RenderItem = ({item}) => (
+  const RenderItem = ({item, index}) => {
+    return (
     <GameItem 
-      children={item.name}
-      id={item.appid}
-      icon={item.img_icon_url}
-    />
-  )
+      sortIndex={index}
+    />)
+    }
 
   const LibraryBody = useMemo(() => {
     console.log(`Memo Updated...\n`)
     return (
       <FlatList 
-        data={sortedUserLibrary}
+        data={sortedLibraryIndexArray}
         renderItem={RenderItem}
-        keyExtractor={item => item.appid}
+        keyExtractor={item => item}
         style={[styles.listContainer, {backgroundColor: DisplayCol('background', mode)}]}
         ListEmptyComponent={<View />}
         getItemLayout={getItemLayout}
         minimumViewTime={5000}
       />
     )
-  }, [sortedUserLibrary, mode])
+  }, [sortedLibraryIndexArray, mode, changedSort, filter])
 
   return (
     <View>
@@ -78,15 +77,3 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 })
-
-/*
-<FlatList 
-  ref={(ref) => { this.flatListRef = ref; }}
-  data={sortedUserLibrary}
-  renderItem={RenderItem}
-  keyExtractor={item => item.appid}
-  style={[styles.listContainer, {backgroundColor: DisplayCol('background', mode)}]}
-  ListEmptyComponent={<View />}
-  getItemLayout={getItemLayout}
-/>
-*/

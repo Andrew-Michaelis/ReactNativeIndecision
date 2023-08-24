@@ -4,27 +4,30 @@ import { useEffect, useState, memo } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
 
 import DisplayCol from "../../util/DisplayColor";
-import { updateDisallowList } from "../../src/actions/userSlice";
+import { updateGameDisallow } from "../../src/actions/userSlice";
 
-function GameItem({ children, id, icon, }) {
-  const disallowList = useSelector((state) => state.user.disallow)
-  const [disallowed, setDisallowed] = useState(disallowList.includes(id))
+function GameItem({ sortIndex }) {
+  const gameObject = useSelector((state) => state.user.sortLib[sortIndex])
+  const gameLib = useSelector((state) => state.user.libIndex)
+  if(gameObject === undefined){
+    return <View></View>
+  }
+  const gameIndex = gameLib.findIndex((gameId) => gameId === gameObject.appid)
+  const [disallowed, setDisallowed] = useState(gameObject.allow === false)
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
-  console.log(`rendering appid: ${id}`)
 
   const dispatch = useDispatch();
 
-  const imgUrl=`http://media.steampowered.com/steamcommunity/public/images/apps/${id}/${icon}.jpg`
+  const imgUrl=`http://media.steampowered.com/steamcommunity/public/images/apps/${gameObject.appid}/${gameObject.img_icon_url}.jpg`
 
   useEffect(() => {
-    setMode(theme.mode);
-    setDisallowed(disallowList.includes(id))
-  }, [theme, disallowList])
+    setMode(theme.mode)
+  }, [theme, disallowed, gameObject])
 
   function allowListToggle() {
     setDisallowed(!disallowed)
-    disallowed ? dispatch(updateDisallowList({type: 'REMOVE', id: id})) : dispatch(updateDisallowList({type: 'ADD', id: id}))
+    dispatch(updateGameDisallow({libIndex: gameIndex, sortIndex: sortIndex}))
   }
 
   return (
@@ -32,7 +35,7 @@ function GameItem({ children, id, icon, }) {
       [styles.widgetView, {
           borderColor: DisplayCol('accent', mode),
         },
-        disallowed ? {backgroundColor: 'transparent'} : {backgroundColor: DisplayCol('primary100', mode)},
+        disallowed ? {backgroundColor: 'transparent', opacity: .5} : {backgroundColor: DisplayCol('primary100', mode)},
       ]}
     >
       <View style={styles.buttonView}>
@@ -49,7 +52,7 @@ function GameItem({ children, id, icon, }) {
         </Pressable>
         <View style={styles.textButton}>
           <View style={styles.justifyYouJerk}>
-            <Text style={{color: DisplayCol('text', mode)}}>{children}</Text>
+            <Text style={{color: DisplayCol('text', mode)}}>{gameObject.name}</Text>
           </View>
         </View>
         <Pressable style={[styles.imageButton, {borderColor: DisplayCol('accent', mode)}]}>

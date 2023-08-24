@@ -6,7 +6,9 @@ const initialState = {
   profileUrl: '',
   id: '',
   count: 0,
+  libIndex: [],
   lib: [{}],
+  sortLibIndex: [],
   sortLib: [{}],
   disallow: [],
 }
@@ -31,19 +33,34 @@ export const userSlice = createSlice({
       state.count = action.payload
     },
     createUserLibrary: (state, action) => {
-      state.lib = action.payload
+      let gameIndexById = []
+      const gameLib = action.payload.map((gameObj) => {
+        gameIndexById.push(gameObj.appid)
+        return gameObj
+      })
+      state.lib = gameLib
+      state.libIndex = gameIndexById
+    },
+    updateGameDisallow: (state, action) => {
+      const libIndex = action.payload.libIndex
+      const sortIndex = action.payload.sortIndex
+      console.log(`disIndex: ${JSON.stringify(libIndex)} || ${JSON.stringify(sortIndex)}`)
+      state.lib[libIndex].allow = !state.lib[libIndex].allow
+      state.sortLib[sortIndex].allow = !state.sortLib[sortIndex].allow
     },
     sortUserLibrary: (state, action) => {
       console.log(`actshere? ${JSON.stringify(action.payload)}`)
       const sortOrder = action.payload?.order || null
       const sortRegex = (action.payload?.search || "").toLowerCase()
       try{
-        console.log("1")
+        let sortOperations = 0
+        sortedLibIndex = []
         sortedLib = state.lib
-        .filter((obj) => {
-          return obj !== undefined && obj.name.toLowerCase().match(sortRegex) !== null && !state.disallow.includes(obj.appid);
+        .filter((gameObj) => {
+          return gameObj !== undefined && gameObj.name.toLowerCase().match(sortRegex) !== null;
         })
         .sort((a, b) => {
+          sortOperations++
           switch(sortOrder) {
             case 'alphabetical':
               return ((a.name === b.name) ? 0 : ((a.name < b.name) ? 1 : -1))
@@ -57,31 +74,17 @@ export const userSlice = createSlice({
               return (a.appid - b.appid)
           }
         })
-        .map((obj) => {
-          return obj
+        .map((gameObj) => {
+          sortedLibIndex.push(gameObj.appid)
+          return gameObj
         })
         state.sortLib = sortedLib;
+        state.sortLibIndex = sortedLibIndex
+        console.log(`sort operations: ${sortOperations}\nsortLib ids: ${state.sortLib.map((obj, index) => obj.appid === state.sortLibIndex[index])}`)
       }catch(e){
         console.log(`ERROR: ${e}`)
       }
     },
-    updateDisallowList: (state, action) => {
-      const TYPE = action.payload.type;
-      const id = action.payload.id;
-      const disallow = state.disallow;
-
-      switch(TYPE){
-        case 'ADD':
-          disallow.push(id)
-          break;
-        case 'REMOVE':
-          i = disallow.indexOf(id)
-          disallow.splice(i, 1)
-          break;
-        default:
-          return
-      }
-    }
   },
 })
 
@@ -93,7 +96,7 @@ export const {
   updateUserGameCount, 
   createUserLibrary, 
   sortUserLibrary,
-  updateDisallowList,
+  updateGameDisallow,
 } = userSlice.actions
 
 export default userSlice.reducer

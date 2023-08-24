@@ -24,6 +24,11 @@ function LandingScreen({ navigation }) {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
 
+  const library = useSelector((state) => state.user.lib)
+  function tester(){
+    console.log(JSON.stringify(library))
+  }
+
   let submitted
 
   useEffect(() => {
@@ -129,7 +134,7 @@ function LandingScreen({ navigation }) {
       </View>
       <View>
         <Text style={[styles.textContainer,{color: DisplayCol('text', mode)}]}>Don't know your Steam Id?</Text>
-        <Button onPress={findMyId}>Tester</Button>
+        <Button onPress={tester}>Tester</Button>
       </View>
     </SafeAreaView>
   );
