@@ -28,11 +28,11 @@ function DisplayCol(col, mode) {
       case 'hint' :
         return GlobalStyles.dark.hint;
       case 'error100' :
-        return GlobalStyles.colors.error100
+        return GlobalStyles.colors.error100;
       case 'error500' :
-        return GlobalStyles.colors.error500
+        return GlobalStyles.colors.error500;
       case 'flare' :
-        return GlobalStyles.colors.flare
+        return GlobalStyles.colors.flare;
       default:
         return 'black';
     }
@@ -59,11 +59,11 @@ function DisplayCol(col, mode) {
       case 'hint':
         return GlobalStyles.light.hint;
       case 'error500' :
-        return GlobalStyles.colors.error100
+        return GlobalStyles.colors.error100;
       case 'error100' :
-        return GlobalStyles.colors.error500
+        return GlobalStyles.colors.error500;
       case 'flare' :
-        return GlobalStyles.colors.flare
+        return GlobalStyles.colors.flare;
       default: 
         return 'white';
     }

@@ -63,13 +63,17 @@ export const userSlice = createSlice({
           sortOperations++
           switch(sortOrder) {
             case 'alphabetical':
-              return ((a.name === b.name) ? 0 : ((a.name < b.name) ? 1 : -1))
-            case 'reverseAlphabetical':
               return ((a.name === b.name) ? 0 : ((a.name > b.name) ? 1 : -1))
+            case 'reverseAlphabetical':
+              return ((a.name === b.name) ? 0 : ((a.name < b.name) ? 1 : -1))
             case 'playtime':
-              return ((a.playtime_forever === b.playtime_forever) ? 0 : ((a.playtime_forever > b.playtime_forever) ? 1 : -1))
+              aTime = parseInt(a.playtime_forever);
+              bTime = parseInt(b.playtime_forever);
+              return ((aTime === bTime) ? 0 : ((aTime < bTime) ? 1 : -1))
             case 'lastplayed':
               return ((a.rtime_last_played === b.rtime_last_played) ? 0 : ((a.rtime_last_played > b.rtime_last_played) ? 1 : -1))
+            case 'firstplayed':
+              return ((a.rtime_last_played === b.rtime_last_played) ? 0 : ((a.rtime_last_played < b.rtime_last_played) ? 1 : -1))
             default:
               return (a.appid - b.appid)
           }

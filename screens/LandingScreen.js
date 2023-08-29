@@ -91,7 +91,7 @@ function LandingScreen({ navigation }) {
           libObject = lib.data.response
           dispatch(updateUserGameCount(libObject.game_count))
           dispatch(createUserLibrary(libObject.games))
-          dispatch(updateFilterPayload({order: "", search: ""}))
+          dispatch(updateFilterPayload({order: "appid", search: ""}))
           dispatch(sortUserLibrary({order: "", search: ""}))
           submitted = true
         }catch(e){

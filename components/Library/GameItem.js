@@ -10,9 +10,6 @@ import { updateGameDisallow } from "../../src/actions/userSlice";
 function GameItem({ sortIndex }) {
   const gameObject = useSelector((state) => state.user.sortLib[sortIndex])
   const gameLib = useSelector((state) => state.user.libIndex)
-  if(gameObject === undefined){
-    return <View></View>
-  }
   const gameIndex = gameLib.findIndex((gameId) => gameId === gameObject.appid)
   const [disallowed, setDisallowed] = useState(gameObject.allow === false)
   const theme = useSelector((state) => state.theme);
@@ -26,6 +23,10 @@ function GameItem({ sortIndex }) {
   useEffect(() => {
     setMode(theme.mode)
   }, [theme, disallowed, gameObject])
+
+  if(gameObject === undefined){
+    return <View></View>
+  }
 
   function allowListToggle() {
     setDisallowed(!disallowed)

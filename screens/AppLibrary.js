@@ -31,7 +31,7 @@ function Library() {
 
   useEffect(() => {
     setMode(theme.mode);
-  }, [theme, filter])
+  }, [theme, filter, sortedLibraryIndexArray])
 
   function handleAvatarPress(){
     fetchLibrary();

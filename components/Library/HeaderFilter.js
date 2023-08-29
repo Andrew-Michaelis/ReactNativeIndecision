@@ -8,10 +8,12 @@ import SearchButton from "./SearchButton";
 
 function HeaderFilter(){
   const theme = useSelector((state) => state.theme);
-  const [mode, setMode] = useState(theme.mode)
+  const [mode, setMode] = useState(theme.mode);
+  const searchOrder = useSelector((state) => state.sorter.order);
   const [searchInput, setSearchInput] = useState('');
   const dispatch = useDispatch();
 
+  console.log(searchOrder);
   let canEdit = true;
 
   useEffect(() => {
@@ -44,7 +46,7 @@ function HeaderFilter(){
         placeholderTextColor={DisplayCol('primary900', mode)}
       />
       <SearchButton 
-        onSearch={() => applySort("", searchInput)}
+        onSearch={() => applySort(searchOrder, searchInput)}
         style={[styles.searchButton, {backgroundColor: DisplayCol('primary700', mode)}]}
       />
     </View>

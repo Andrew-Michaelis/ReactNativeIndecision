@@ -7,7 +7,7 @@ export const GlobalStyles = {
   light: {
     text: '#050505',
     hint: '#696969',
-    background: '#fafafa',
+    background: '#EFFFF0',
     primary100: '#D3F1DA',
     primary300: '#9DDFAD',
     primary500: '#7ad180',
