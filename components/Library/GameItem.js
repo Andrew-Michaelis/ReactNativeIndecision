@@ -51,9 +51,7 @@ function GameItem({ sortIndex }) {
           />
         </Pressable>
         <View style={styles.textButton}>
-          <View style={styles.justifyYouJerk}>
-            <Text style={{color: DisplayCol('text', mode)}}>{gameObject.name}</Text>
-          </View>
+          <Text style={{color: DisplayCol('text', mode)}}>{gameObject.name}</Text>
         </View>
         <Pressable style={[styles.imageButton, {borderColor: DisplayCol('accent', mode)}]}>
           <Image 

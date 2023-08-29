@@ -1,11 +1,20 @@
 import { StyleSheet, View, Text } from "react-native";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+
 import DisplayCol from "../../util/DisplayColor";
 
-
 function Title({ children, style, textStyle }){
+  const theme = useSelector((state) => state.theme);
+  const [mode, setMode] = useState(theme.mode);
+
+  useEffect(() => {
+    setMode(theme.mode);
+  }, [theme])
+
   return (
     <View style={[styles.textContainer, style]}>
-      <Text style={[styles.text, textStyle]}>{children}</Text>
+      <Text style={[styles.text, textStyle, {color: DisplayCol('text', mode),}]}>{children}</Text>
     </View>
   )
 }
@@ -18,7 +27,6 @@ const styles = StyleSheet.create({
     margin: 12,
   },
   text: {
-    color: DisplayCol('text'),
     fontFamily: 'Barlow-Black',
     fontSize: 24,
     fontWeight: 'bold',

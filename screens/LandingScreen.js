@@ -72,7 +72,7 @@ function LandingScreen({ navigation }) {
     if(isValidUser[0]){
       let err = ['Fetching Failed','Fetching profile information for '];
       const userUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${isValidUser[1]}`;
-      const libUrl = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${isValidUser[1]}&include_appinfo=true&format=json`;
+      const libUrl = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${isValidUser[1]}&include_appinfo=1&include_played_free_games=1&format=json`;
       console.log(`userUrl: ${userUrl}\nlibUrl: ${libUrl}`);
       try{
         const user = await axios.get(userUrl);

@@ -9,6 +9,7 @@ import DisplayCol from '../util/DisplayColor';
 import LoadingScreen from '../screens/LoadingScreen';
 import LandingScreen from '../screens/LandingScreen';
 import CoreNavigation from './Core';
+import { View } from 'react-native';
 
 const Stack = createStackNavigator();
 

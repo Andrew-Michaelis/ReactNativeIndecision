@@ -80,7 +80,7 @@ export const userSlice = createSlice({
         })
         state.sortLib = sortedLib;
         state.sortLibIndex = sortedLibIndex
-        console.log(`sort operations: ${sortOperations}\nsortLib ids: ${state.sortLib.map((obj, index) => obj.appid === state.sortLibIndex[index])}`)
+        console.log(`sort operations: ${sortOperations}`)
       }catch(e){
         console.log(`ERROR: ${e}`)
       }
