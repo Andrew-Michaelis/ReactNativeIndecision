@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  order: "",
+  order: "appid",
   search: "",
 }
 

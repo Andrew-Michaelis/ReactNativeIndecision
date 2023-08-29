@@ -7,24 +7,34 @@ import DisplayCol from "../../util/DisplayColor";
 function Button({ children, onPress, type, style }) {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
+  const [label, setLabel] = useState(children)
 
   useEffect(() => {
     setMode(theme.mode);
-  }, [theme])
+    setLabel(children);
+  }, [theme, children, style])
+
   return (
-    <View style={[styles.buttonContainer, style]}>
+    <View style={[styles.buttonContainer, style, {overflow: 'hidden'}]}>
       <Pressable 
         onPress={onPress} 
         style={
-          [style, ({pressed}) => pressed && styles.pressed, {backgroundColor: DisplayCol('primary100', mode)}]}>
+          [({pressed}) => pressed && styles.pressed, {backgroundColor: DisplayCol('primary100', mode), overflow: 'hidden'}]}>
         <View style={
           [styles.button, {
             backgroundColor: DisplayCol('primary300', mode),
             borderColor: DisplayCol('primary900', mode),
+            overflow: 'hidden',
           }, 
           type === 'flat' && {
             backgroundColor: DisplayCol('background', mode),
             borderColor: DisplayCol('primary300', mode),
+            overflow: 'hidden',
+          },
+          type === 'edit' && {
+            backgroundColor: DisplayCol('error500', mode),
+            borderColor: DisplayCol('error100', mode),
+            overflow: 'hidden',
           }, style]}>
           <Text style={
             [styles.buttonText, {
@@ -33,7 +43,7 @@ function Button({ children, onPress, type, style }) {
             type === 'flat' && {
               color: DisplayCol('primary900', mode),
             }, {textTransform: 'uppercase'}]}>
-            {children}
+            {label}
           </Text>
         </View>
       </Pressable>
@@ -47,6 +57,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginVertical: 4,
     minWidth: 100,
+    borderRadius: 6,
   },
   button: {
     borderRadius: 6,

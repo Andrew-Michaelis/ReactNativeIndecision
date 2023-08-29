@@ -4,19 +4,14 @@ import { useSelector } from "react-redux";
 import * as WebBrowser from 'expo-web-browser';
 
 import DisplayCol from "../../util/DisplayColor";
-import Button from "../UI/Button";
 
-function SelectedGameButton({ index, randPressed }) {
+function SelectedGameButton({ index }) {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
   let gameObject = useSelector((state) => state.user.lib[index])
 
   const imgUrl = `http://media.steampowered.com/steamcommunity/public/images/apps/${gameObject.appid}/${gameObject.img_icon_url}.jpg`
   const storeUrl = `https://store.steampowered.com/app/${gameObject.appid}`
-  
-  function gotoStorePage() {
-    WebBrowser.openBrowserAsync(storeUrl)
-  }
 
   useEffect(() => {
     setMode(theme.mode);
@@ -32,18 +27,15 @@ function SelectedGameButton({ index, randPressed }) {
         }
       ]}
     >
-      <View style={styles.testing}>
-        <View style={styles.textButton}>
-          <Text 
-            style={[styles.text, {color: DisplayCol('text', mode)}]}
-            adjustsFontSizeToFit
-          >{gameObject.name}</Text>
-        </View>
-        <Button type='flat' onPress={randPressed} style={styles.button}>reroll</Button>
+      <View style={styles.textButton}>
+        <Text 
+          style={[styles.text, {color: DisplayCol('text', mode)}]}
+          adjustsFontSizeToFit
+        >{gameObject.name}</Text>
       </View>
       <Pressable 
         style={[styles.imageButton, {borderColor: DisplayCol('accent', mode)}]}
-        onPress={gotoStorePage}
+        onPress={() => WebBrowser.openBrowserAsync(storeUrl)}
       >
         <Image 
           defaultSource={require('../../assets/icon.png')}
@@ -66,13 +58,6 @@ const styles = StyleSheet.create({
     width: 300,
     borderRadius: 16,
     borderWidth: 2,
-  },
-  testing: {
-    flexDirection: 'column',
-    flexShrink: 1,
-    flexGrow: 1,
-    justifyContent: 'space-between',
-    margin: 8,
   },
   textButton: {
     flexShrink: 1,

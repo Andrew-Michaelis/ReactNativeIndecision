@@ -14,7 +14,7 @@ function Title({ children, style, textStyle }){
 
   return (
     <View style={[styles.textContainer, style]}>
-      <Text style={[styles.text, textStyle, {color: DisplayCol('text', mode),}]}>{children}</Text>
+      <Text style={[styles.text, {color: DisplayCol('text', mode)}, textStyle]}>{children}</Text>
     </View>
   )
 }

@@ -2,6 +2,7 @@ import { Pressable, View, Text, StyleSheet, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, memo } from "react";
 import { MaterialIcons } from '@expo/vector-icons';
+import * as WebBrowser from 'expo-web-browser';
 
 import DisplayCol from "../../util/DisplayColor";
 import { updateGameDisallow } from "../../src/actions/userSlice";
@@ -20,6 +21,7 @@ function GameItem({ sortIndex }) {
   const dispatch = useDispatch();
 
   const imgUrl=`http://media.steampowered.com/steamcommunity/public/images/apps/${gameObject.appid}/${gameObject.img_icon_url}.jpg`
+  const storeUrl = `https://store.steampowered.com/app/${gameObject.appid}`
 
   useEffect(() => {
     setMode(theme.mode)
@@ -53,7 +55,12 @@ function GameItem({ sortIndex }) {
         <View style={styles.textButton}>
           <Text style={{color: DisplayCol('text', mode)}}>{gameObject.name}</Text>
         </View>
-        <Pressable style={[styles.imageButton, {borderColor: DisplayCol('accent', mode)}]}>
+        <Pressable 
+          style={[styles.imageButton, {
+            borderColor: DisplayCol('accent', mode)
+          }]}
+          onPress={() => WebBrowser.openBrowserAsync(storeUrl)}
+        >
           <Image 
             defaultSource={require('../../assets/icon.png')}
             source={{uri: imgUrl}}

@@ -37,7 +37,7 @@ function Library() {
     fetchLibrary();
   }
 
-  const RenderItem = ({item, index}) => {
+  const RenderItem = ({index}) => {
     return (
       <GameItem 
         sortIndex={index}

@@ -31,7 +31,8 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.2",
     "expo-system-ui": "~2.4.0",
-    "expo-web-browser": "~12.3.2"
+    "expo-web-browser": "~12.3.2",
+    "@react-native-picker/picker": "2.4.10"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
