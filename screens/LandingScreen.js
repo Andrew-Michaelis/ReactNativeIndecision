@@ -12,9 +12,10 @@ import DisplayCol from "../util/DisplayColor";
 import Button from "../components/UI/Button";
 import Title from "../components/UI/Title";
 
-const findMyIdHelp = "How to find your Steam ID: Finding your SteamID is easy. All you need to do is log into Steam via your web browser or the Steam application. From there, click your username in the top-right corner of the window and select ‘Account details’ from the dropdown menu. Your 17 digit SteamID will appear near the top of this screen, right below your Steam username. These numbers are known as your Steam 64-bit ID, and they act as a unique identifier for your Steam account. Copy them, and you’re ready to go.";
+const findMyIdHelp = "Finding your SteamID is easy. All you need to do is log into Steam via your web browser or the Steam application. From there, click your username in the top-right corner of the window and select ‘Account details’ from the dropdown menu. Your 17 digit SteamID will appear near the top of this screen, right below your Steam username. These numbers are known as your Steam 64-bit ID, and they act as a unique identifier for your Steam account. Copy them, and you’re ready to go.";
 const apiKey = API_KEY;
-const pleaseWork = "76561198031476867"
+const dev = false;
+const devUID = dev ? "YOUR_USER_ID_HERE" : "";
 
 function LandingScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -24,11 +25,6 @@ function LandingScreen({ navigation }) {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode)
 
-  const library = useSelector((state) => state.user.lib)
-  function tester(){
-    console.log(JSON.stringify(library))
-  }
-
   let submitted
 
   useEffect(() => {
@@ -36,14 +32,14 @@ function LandingScreen({ navigation }) {
   }, [theme])
 
   function findMyId() {
-
+    Alert.alert('How to find your Steam ID: ', findMyIdHelp)
   }
 
   const isValidId = (user, input) =>{
     let idValid = '';
     let confirmingState = '';
     if(user === undefined){
-      console.log(`user: ${user}`)
+      console.log(`user: ${user}`) // dev log to indicate undefined user
       return;
     }else if(user.length === 17 && !isNaN(user)){
       idValid = true
@@ -73,11 +69,11 @@ function LandingScreen({ navigation }) {
       let err = ['Fetching Failed','Fetching profile information for '];
       const userUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${apiKey}&steamids=${isValidUser[1]}`;
       const libUrl = `https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${apiKey}&steamid=${isValidUser[1]}&include_appinfo=1&include_played_free_games=1&format=json`;
-      console.log(`userUrl: ${userUrl}\nlibUrl: ${libUrl}`);
+      // console.log(`userUrl: ${userUrl}\nlibUrl: ${libUrl}`); // dev info to validate url generation
       try{
         const user = await axios.get(userUrl);
         userObject = await user.data.response.players[0];
-        console.log(`user: ${userObject.personaname}\navatar: ${userObject.avatar}\nuserProfile: ${userObject.profileurl}`)
+        // console.log(`user: ${userObject.personaname}\navatar: ${userObject.avatar}\nuserProfile: ${userObject.profileurl}`) // dev info to validate returned information
         dispatch(updateUserName(userObject.personaname))
         dispatch(updateUserAvatar(userObject.avatar))
         dispatch(updateUserProfile(userObject.profileurl))
@@ -92,7 +88,6 @@ function LandingScreen({ navigation }) {
           dispatch(updateUserGameCount(libObject.game_count))
           dispatch(createUserLibrary(libObject.games))
           dispatch(updateFilterPayload({order: "appid", search: ""}))
-          dispatch(sortUserLibrary({order: "", search: ""}))
           submitted = true
         }catch(e){
           err[0] += `user:${userName} `
@@ -118,7 +113,7 @@ function LandingScreen({ navigation }) {
           }]}
           onChangeText={(text) => setIdInput(text)}
           value={idInput}
-          onLayout={()=> userId === '' ? setIdInput(pleaseWork) : setIdInput(userId)}
+          onLayout={()=> dev ? setIdInput(devUID) : userId !== '' && setIdInput(userId)}
           autoComplete='off'
           autoCorrect={false}
           cursorColor={DisplayCol('text', mode)}
@@ -134,7 +129,7 @@ function LandingScreen({ navigation }) {
       </View>
       <View>
         <Text style={[styles.textContainer,{color: DisplayCol('text', mode)}]}>Don't know your Steam Id?</Text>
-        <Button onPress={tester}>Tester</Button>
+        <Button onPress={findMyId}>Here's How To Find It!</Button>
       </View>
     </SafeAreaView>
   );

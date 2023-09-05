@@ -12,10 +12,12 @@ import { GlobalStyles } from "../constants/styles";
 let randGamesArray = []
 
 function Home() {
+  const libIndex = useSelector((state) => state.user.libIndex)
   const librarySize = useSelector((state) => state.user.count);
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
-  const [curentGame, setCurentGame] = useState()
+  const [currentGame, setCurrentGame] = useState()
+
   function randomizeCurrentGame() {
     while (randGamesArray.length > 0) {
       randGamesArray.shift()
@@ -24,9 +26,8 @@ function Home() {
       randGamesArray.push(Math.floor(Math.random() * librarySize))
     }
     console.log(randGamesArray)
-    setCurentGame(randGamesArray[0])
+    setCurrentGame(libIndex.indexOf(libIndex[randGamesArray[0]]))
   }
-  // randomizeCurrentGame()
 
   useEffect(() => {
     setMode(theme.mode);
@@ -35,23 +36,23 @@ function Home() {
   return randGamesArray.length > 0 ? (
     <View style={[styles.homeRoot, {backgroundColor: DisplayCol('background', mode)}]}>
       <Title style={styles.title}>Your Random Game</Title>
-      <SelectedGameButton index={curentGame} randPressed={randomizeCurrentGame}/>
+      <SelectedGameButton index={currentGame} randPressed={randomizeCurrentGame}/>
       <Title style={styles.title}>Some Other Options</Title>
       <View style={styles.moreGames}>
-        <GameItem sortIndex={randGamesArray[1]}/>
-        <GameItem sortIndex={randGamesArray[2]}/>
-        <GameItem sortIndex={randGamesArray[3]}/>
-        <GameItem sortIndex={randGamesArray[4]}/>
+        <GameItem sortId={libIndex[randGamesArray[1]]}/>
+        <GameItem sortId={libIndex[randGamesArray[2]]}/>
+        <GameItem sortId={libIndex[randGamesArray[3]]}/>
+        <GameItem sortId={libIndex[randGamesArray[4]]}/>
       </View>
     </View>
-    ) : (
+  ) : (
     <View style={[styles.homeRoot, {backgroundColor: DisplayCol('background', mode)}, styles.homeInit]}>
       <Title 
         style={styles.title} 
         textStyle={[styles.appTitle, {textShadowColor: DisplayCol('primary900', mode)}]}>{('Indecision').toUpperCase()}</Title>
       <Button onPress={randomizeCurrentGame}>Get A Random Game</Button>
     </View>
-    )
+  )
 }
 
 export default Home;

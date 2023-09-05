@@ -16,7 +16,7 @@ export const sorterSlice = createSlice({
       state.search = action.payload;
     },
     updateFilterPayload: (state, action) => {
-      console.log(`mass update: ${JSON.stringify(action.payload)}`)
+      // console.log(`mass update: ${JSON.stringify(action.payload)}`)
       state.order = action.payload.order;
       state.search = action.payload.search;
     }

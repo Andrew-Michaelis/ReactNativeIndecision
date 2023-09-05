@@ -7,10 +7,9 @@ import * as WebBrowser from 'expo-web-browser';
 import DisplayCol from "../../util/DisplayColor";
 import { updateGameDisallow } from "../../src/actions/userSlice";
 
-function GameItem({ sortIndex }) {
-  const gameObject = useSelector((state) => state.user.sortLib[sortIndex])
-  const gameLib = useSelector((state) => state.user.libIndex)
-  const gameIndex = gameLib.findIndex((gameId) => gameId === gameObject.appid)
+function GameItem({ sortId }) {
+  const gameIndex = useSelector((state) => state.user.libIndex.indexOf(sortId))
+  const gameObject = useSelector((state) => state.user.lib[gameIndex])
   const [disallowed, setDisallowed] = useState(gameObject.allow === false)
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
@@ -22,7 +21,7 @@ function GameItem({ sortIndex }) {
 
   useEffect(() => {
     setMode(theme.mode)
-  }, [theme, disallowed, gameObject])
+  }, [theme, disallowed])
 
   if(gameObject === undefined){
     return <View></View>
@@ -30,7 +29,7 @@ function GameItem({ sortIndex }) {
 
   function allowListToggle() {
     setDisallowed(!disallowed)
-    dispatch(updateGameDisallow({libIndex: gameIndex, sortIndex: sortIndex}))
+    dispatch(updateGameDisallow({libIndex: gameIndex}))
   }
 
   return (

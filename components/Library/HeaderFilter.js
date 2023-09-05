@@ -3,29 +3,24 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import DisplayCol from "../../util/DisplayColor";
-import { sortUserLibrary } from "../../src/actions/userSlice";
 import SearchButton from "./SearchButton";
+import { updateSearch } from "../../src/actions/sorterSlice";
 
 function HeaderFilter(){
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
-  const searchOrder = useSelector((state) => state.sorter.order);
   const [searchInput, setSearchInput] = useState('');
   const dispatch = useDispatch();
-
-  console.log(searchOrder);
   let canEdit = true;
 
   useEffect(() => {
     setMode(theme.mode);
   }, [theme])
 
-  function applySort(order, search) {
-    typeof search === 'string' ? search = search : search = "";
+  function applySort(search) {
     canEdit = false;
-    dispatch(sortUserLibrary({order: order, search: search}));
+    dispatch(updateSearch(search));
     canEdit = true;
-    magic = false;
   }
 
   return (
@@ -46,7 +41,7 @@ function HeaderFilter(){
         placeholderTextColor={DisplayCol('primary900', mode)}
       />
       <SearchButton 
-        onSearch={() => applySort(searchOrder, searchInput)}
+        onSearch={() => applySort(searchInput)}
         style={[styles.searchButton, {backgroundColor: DisplayCol('primary700', mode)}]}
       />
     </View>

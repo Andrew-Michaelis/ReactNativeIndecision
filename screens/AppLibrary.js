@@ -1,13 +1,14 @@
 import { FlatList, StyleSheet, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
+import * as WebBrowser from "expo-web-browser";
 
 import LibraryHeader from "../components/Library/LibraryHeader";
 import GameItem from "../components/Library/GameItem"
 
 import DisplayCol from "../util/DisplayColor";
-import { sortUserLibrary } from "../src/actions/userSlice";
 import Title from "../components/UI/Title";
+import SortUserLibrary from "../util/SortUserLibrary";
 
 const getItemLayout = (data, index) => (
   {length: 58, offset: 58 * index, index}
@@ -16,42 +17,39 @@ const getItemLayout = (data, index) => (
 function Library() {
   const theme = useSelector((state) => state.theme);
   const [mode, setMode] = useState(theme.mode);
-  const sortedLibraryIndexArray = useSelector((state) => state.user.sortLibIndex)
-  const changedSort = useSelector((state) => state.user.sortLib.length)
 
+  const lib = useSelector((state) => state.user.lib);
   const orderRule = useSelector((state) => state.sorter.order);
   const searchRule = useSelector((state) => state.sorter.search);
   const filter = {order: orderRule, search: searchRule};
 
-  const dispatch = useDispatch();
-
-  const fetchLibrary = () => {
-    dispatch(sortUserLibrary(filter));
-  }
+  const profileUrl = useSelector((state) => state.user.profileUrl);
 
   useEffect(() => {
     setMode(theme.mode);
-  }, [theme, filter, sortedLibraryIndexArray])
+  }, [theme, filter])
 
-  function handleAvatarPress(){
-    fetchLibrary();
-  }
-
-  const RenderItem = ({index}) => {
+  const RenderItem = ({item}) => {
     return (
       <GameItem 
-        sortIndex={index}
+        sortId={item}
       />
-      )
-    }
+    )
+  }
+
+  function handleAvatarPress() {
+    WebBrowser.openBrowserAsync(profileUrl)
+  }
+
+  const sortedLibrary =  SortUserLibrary(filter, lib);
 
   const LibraryBody = useMemo(() => {
-    console.log(`Memo Updated...\n`)
+    // console.log(`Memo Updated...`) // debug info, displays given string every time an update occurs
     return (
       <View style={[styles.libraryRoot, {backgroundColor: DisplayCol('background', mode)}]}>
         <Title>Library</Title>
         <FlatList 
-          data={sortedLibraryIndexArray}
+          data={sortedLibrary}
           renderItem={RenderItem}
           keyExtractor={item => item}
           style={[styles.listContainer]}
@@ -61,7 +59,7 @@ function Library() {
         />
       </View>
     )
-  }, [sortedLibraryIndexArray, mode, changedSort, filter])
+  }, [mode, filter])
 
   return (
     <View>
@@ -79,7 +77,6 @@ const styles = StyleSheet.create({
     height: '100%', 
   },
   listContainer: {
-    flexGrow: 1,
     paddingHorizontal: 16,
     marginBottom: 70,
   },

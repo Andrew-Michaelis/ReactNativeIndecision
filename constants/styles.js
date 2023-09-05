@@ -14,7 +14,7 @@ export const GlobalStyles = {
     primary700: '#559263',
     primary900: '#315439',
     secondary: '#d9f2db',
-    accent: '#19e627',
+    accent: '#377D3C',
   },
   dark: {
     text: '#fafafa',

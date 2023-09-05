@@ -8,8 +8,6 @@ const initialState = {
   count: 0,
   libIndex: [],
   lib: [{}],
-  sortLibIndex: [],
-  sortLib: [{}],
   disallow: [],
 }
 
@@ -43,51 +41,8 @@ export const userSlice = createSlice({
     },
     updateGameDisallow: (state, action) => {
       const libIndex = action.payload.libIndex
-      const sortIndex = action.payload.sortIndex
-      console.log(`disIndex: ${JSON.stringify(libIndex)} || ${JSON.stringify(sortIndex)}`)
+      console.log(`disIndex: ${JSON.stringify(libIndex)} ||`)
       state.lib[libIndex].allow = !state.lib[libIndex].allow
-      state.sortLib[sortIndex].allow = !state.sortLib[sortIndex].allow
-    },
-    sortUserLibrary: (state, action) => {
-      console.log(`actshere? ${JSON.stringify(action.payload)}`)
-      const sortOrder = action.payload?.order || null
-      const sortRegex = (action.payload?.search || "").toLowerCase()
-      try{
-        let sortOperations = 0
-        sortedLibIndex = []
-        sortedLib = state.lib
-        .filter((gameObj) => {
-          return gameObj !== undefined && gameObj.name.toLowerCase().match(sortRegex) !== null;
-        })
-        .sort((a, b) => {
-          sortOperations++
-          switch(sortOrder) {
-            case 'alphabetical':
-              return ((a.name === b.name) ? 0 : ((a.name > b.name) ? 1 : -1))
-            case 'reverseAlphabetical':
-              return ((a.name === b.name) ? 0 : ((a.name < b.name) ? 1 : -1))
-            case 'playtime':
-              aTime = parseInt(a.playtime_forever);
-              bTime = parseInt(b.playtime_forever);
-              return ((aTime === bTime) ? 0 : ((aTime < bTime) ? 1 : -1))
-            case 'lastplayed':
-              return ((a.rtime_last_played === b.rtime_last_played) ? 0 : ((a.rtime_last_played > b.rtime_last_played) ? 1 : -1))
-            case 'firstplayed':
-              return ((a.rtime_last_played === b.rtime_last_played) ? 0 : ((a.rtime_last_played < b.rtime_last_played) ? 1 : -1))
-            default:
-              return (a.appid - b.appid)
-          }
-        })
-        .map((gameObj) => {
-          sortedLibIndex.push(gameObj.appid)
-          return gameObj
-        })
-        state.sortLib = sortedLib;
-        state.sortLibIndex = sortedLibIndex
-        console.log(`sort operations: ${sortOperations}`)
-      }catch(e){
-        console.log(`ERROR: ${e}`)
-      }
     },
   },
 })

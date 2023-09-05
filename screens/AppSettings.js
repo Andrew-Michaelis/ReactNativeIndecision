@@ -44,7 +44,7 @@ function Settings() {
   }
 
   function changeSortSetting(value) {
-    console.log(`order: ${order} || value: ${value}\noString? ${typeof order === 'string'}\nvString? ${typeof value === 'string'}`)
+    console.log(`order: ${order} || value: ${value}`)
     order !== value ? setChangeSort(true) : setChangeSort(false)
   }
 
