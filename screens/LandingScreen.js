@@ -14,8 +14,13 @@ import Title from "../components/UI/Title";
 
 const findMyIdHelp = "Finding your SteamID is easy. All you need to do is log into Steam via your web browser or the Steam application. From there, click your username in the top-right corner of the window and select ‘Account details’ from the dropdown menu. Your 17 digit SteamID will appear near the top of this screen, right below your Steam username. These numbers are known as your Steam 64-bit ID, and they act as a unique identifier for your Steam account. Copy them, and you’re ready to go.";
 const apiKey = API_KEY;
+
+
+//------------------------------------------------------------------------------------
 const dev = false;
 const devUID = dev ? "YOUR_USER_ID_HERE" : "";
+//------------------------------------------------------------------------------------
+
 
 function LandingScreen({ navigation }) {
   const dispatch = useDispatch();
